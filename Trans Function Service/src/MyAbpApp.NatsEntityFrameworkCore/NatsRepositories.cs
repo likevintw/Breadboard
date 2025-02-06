@@ -30,11 +30,13 @@ namespace MyAbpApp.NatsRepositories
                     Password = password,
                 }
             });
+
+            CreatePercentageWorker("Percentager", "ReturnPercentage", "1.0.1", "transfer to percentage");
         }
         ~NatsRepository()
         {
         }
-        public async Task CreatePercentageWorker(string serviceName, string serviceVersion, string serviceDescription)
+        public async Task CreatePercentageWorker(string serviceName, string functionName, string serviceVersion, string serviceDescription)
         {
             var svc = _Client.CreateServicesContext();
 
@@ -45,7 +47,7 @@ namespace MyAbpApp.NatsRepositories
 
             var root = await service.AddGroupAsync(serviceName, serviceVersion);
 
-            await root.AddEndpointAsync(ReturnPercentage, serviceName, serializer: NatsJsonSerializer<double>.Default);
+            await root.AddEndpointAsync(ReturnPercentage, functionName, serializer: NatsJsonSerializer<double>.Default);
             Console.WriteLine($"add {serviceName} service, version {serviceVersion}");
 
 
