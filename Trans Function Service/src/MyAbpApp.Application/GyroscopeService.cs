@@ -2,8 +2,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Apache.IoTDB;
-using Apache.IoTDB.DataStructure;
 using System.Collections.Generic;
 using MyAbpApp.IGyroscopeServices;
 using MyAbpApp.IIotRepositories;

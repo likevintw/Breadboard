@@ -3,8 +3,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Apache.IoTDB;
-using Apache.IoTDB.DataStructure;
 using System.Collections.Generic;
 using Microsoft.Extensions.Hosting;
 using MyAbpApp.ICpqServices;

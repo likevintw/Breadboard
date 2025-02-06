@@ -128,6 +128,7 @@ public class MyAbpAppWebModule : AbpModule
         context.Services.AddSingleton<IGyroscopeService, GyroscopeService>();
         context.Services.AddSingleton<IIotRepository, IoTDbRepository>();
         context.Services.AddSingleton<IQueueRepository, NatsRepository>();
+        context.Services.AddSingleton<ICpqService, CpqService>();
         context.Services.AddHostedService<CpqService>();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
