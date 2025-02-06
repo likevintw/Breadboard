@@ -1,0 +1,13 @@
+﻿{
+  "applications": {
+    "MyAbpApp.Web": {
+      "type": "dotnet-project",
+      "launchUrl": "http://0.0.0.0:44377",
+      "path": "../../../src/MyAbpApp.Web/MyAbpApp.Web.csproj",
+      "kubernetesService": ".*-web$",
+      "execution": {
+        "order": 2
+      }
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.BasicTheme": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.Account": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.TenantManagement": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "9.0.3",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "MyAbpApp.Application": {
+      "path": "src/MyAbpApp.Application/MyAbpApp.Application.abppkg",
+      "folder": "src"
+    },
+    "MyAbpApp.Application.Tests": {
+      "path": "test/MyAbpApp.Application.Tests/MyAbpApp.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "MyAbpApp.Domain.Shared": {
+      "path": "src/MyAbpApp.Domain.Shared/MyAbpApp.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "MyAbpApp.Application.Contracts": {
+      "path": "src/MyAbpApp.Application.Contracts/MyAbpApp.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "MyAbpApp.HttpApi": {
+      "path": "src/MyAbpApp.HttpApi/MyAbpApp.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "MyAbpApp.HttpApi.Client": {
+      "path": "src/MyAbpApp.HttpApi.Client/MyAbpApp.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "MyAbpApp.Web": {
+      "path": "src/MyAbpApp.Web/MyAbpApp.Web.abppkg",
+      "folder": "src"
+    },
+    "MyAbpApp.Web.Tests": {
+      "path": "test/MyAbpApp.Web.Tests/MyAbpApp.Web.Tests.abppkg",
+      "folder": "test"
+    },
+    "MyAbpApp.EntityFrameworkCore.Tests": {
+      "path": "test/MyAbpApp.EntityFrameworkCore.Tests/MyAbpApp.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "MyAbpApp.EntityFrameworkCore": {
+      "path": "src/MyAbpApp.EntityFrameworkCore/MyAbpApp.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "MyAbpApp.TestBase": {
+      "path": "test/MyAbpApp.TestBase/MyAbpApp.TestBase.abppkg",
+      "folder": "test"
+    },
+    "MyAbpApp.Domain.Tests": {
+      "path": "test/MyAbpApp.Domain.Tests/MyAbpApp.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "MyAbpApp.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/MyAbpApp.HttpApi.Client.ConsoleTestApp/MyAbpApp.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "MyAbpApp.DbMigrator": {
+      "path": "src/MyAbpApp.DbMigrator/MyAbpApp.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "MyAbpApp.Domain": {
+      "path": "src/MyAbpApp.Domain/MyAbpApp.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}
