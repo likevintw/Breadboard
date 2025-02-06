@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MyAbpApp.Domain\MyAbpApp.Domain.csproj" />
-    <ProjectReference Include="..\MyAbpApp.Infra\MyAbpApp.Infra.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -18,6 +18,7 @@ namespace MyAbpApp.CpqDtos
     public class CreateMicroserviceRequest
     {
         public required string ServiceName { get; set; }
+        public required string FunctionName { get; set; }
         public required string ServiceVersion { get; set; }
         public required string ServiceDescription { get; set; }
     }

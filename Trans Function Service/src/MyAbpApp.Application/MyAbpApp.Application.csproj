@@ -13,7 +13,6 @@
     <ProjectReference Include="..\MyAbpApp.Domain\MyAbpApp.Domain.csproj" />
     <ProjectReference Include="..\MyAbpApp.Application.Contracts\MyAbpApp.Application.Contracts.csproj" />
     <ProjectReference Include="..\MyAbpApp.EntityFrameworkCore\MyAbpApp.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\MyAbpApp.Infra\MyAbpApp.Infra.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -40,6 +40,7 @@ using System;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Volo.Abp.Account.Web;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared.Toolbars;
@@ -50,6 +51,7 @@ using Volo.Abp.OpenIddict;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.SettingManagement.Web;
 using Volo.Abp.Studio.Client.AspNetCore;
+
 using MyAbpApp.ISmsServices;
 using MyAbpApp.AzureSmsServices;
 using MyAbpApp.GyroscopeServices;
@@ -126,7 +128,7 @@ public class MyAbpAppWebModule : AbpModule
         context.Services.AddSingleton<IGyroscopeService, GyroscopeService>();
         context.Services.AddSingleton<IIotRepository, IoTDbRepository>();
         context.Services.AddSingleton<IQueueRepository, NatsRepository>();
-        context.Services.AddSingleton<ICpqService, CpqService>();
+        context.Services.AddHostedService<CpqService>();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 

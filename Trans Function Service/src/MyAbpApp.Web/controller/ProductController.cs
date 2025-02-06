@@ -158,13 +158,15 @@ namespace MyAbpApp.Web.Controllers
             return Ok(microservices);
         }
         [HttpPost("honeywell_ce3245")]
-        public async Task<IActionResult> CreateServiceHoneywell_ce3245([FromBody] CreateMicroserviceRequest request)
+        public async Task<IActionResult> CreateServiceHoneywellCe3245([FromBody] CreateMicroserviceRequest request)
         {
             string ServiceName = request.ServiceName;
+            string FunctionName = request.FunctionName;
             string ServiceVersion = request.ServiceVersion;
             string ServiceDescription = request.ServiceDescription;
-            var result = await _iCpqService.CreateServiceHoneywell_ce3245(
+            var result = await _iCpqService.CreateServiceHoneywellCe3245(
                 ServiceName,
+                FunctionName,
                 ServiceVersion,
                 ServiceDescription
             );

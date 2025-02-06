@@ -30,8 +30,6 @@ namespace MyAbpApp.NatsRepositories
                     Password = password,
                 }
             });
-
-            CreatePercentageWorker("Percentager", "ReturnPercentage", "1.0.1", "transfer to percentage");
         }
         ~NatsRepository()
         {
@@ -61,20 +59,18 @@ namespace MyAbpApp.NatsRepositories
                 return msg.ReplyAsync($"{msg.Data * 100}");
             }
         }
-        public async Task CreateServiceHoneywell_ce3245(string serviceName, string serviceVersion, string serviceDescription)
+        public async Task CreateServiceHoneywellCe3245(
+           string ServiceName, string FunctionName, string ServiceVersion, string ServiceDescription)
         {
             var svc = _Client.CreateServicesContext();
 
-            var service = await svc.AddServiceAsync(new NatsSvcConfig(serviceName, serviceVersion)
+            var inputService = await svc.AddServiceAsync(new NatsSvcConfig(ServiceName, ServiceVersion)
             {
-                Description = serviceDescription
+                Description = ServiceDescription
             });
-
-            var root = await service.AddGroupAsync(serviceName, serviceVersion);
-
-            await root.AddEndpointAsync(GetHoneywell_ce3245Compensation, serviceName, serializer: NatsJsonSerializer<double>.Default);
-            Console.WriteLine($"add {serviceName} service, version {serviceVersion}");
-
+            var root = await inputService.AddGroupAsync(ServiceName, ServiceVersion);
+            await root.AddEndpointAsync(GetHoneywell_ce3245Compensation, FunctionName, serializer: NatsJsonSerializer<double>.Default);
+            Console.WriteLine($"add {ServiceName} service, version {ServiceVersion}");
 
             await Task.Delay(int.MaxValue);
 

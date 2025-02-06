@@ -19,7 +19,7 @@ namespace MyAbpApp.ICpqServices
     public interface ICpqService
     {
         Task<NatsMicroservices> GetAllNatsMicroservice();
-        Task<(string result, string serviceId)> CreateServiceHoneywell_ce3245(string ServiceName, string serviceVersion, string ServiceDescription);
+        Task<(string result, string serviceId)> CreateServiceHoneywellCe3245(string ServiceName, string FunctionName, string ServiceVersion, string ServiceDescription);
         // Task<(string result, string serviceId)> CreateServiceTasto_ks456(string ServiceName, string serviceVersion, string ServiceDescription);
         // Task<(string result, string serviceId)> CreateServicePercentage(string ServiceName, string serviceVersion, string ServiceDescription);
         Task<string> DeleteNatsService(string serviceId);
