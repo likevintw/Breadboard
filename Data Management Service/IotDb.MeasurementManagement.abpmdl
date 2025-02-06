@@ -1,0 +1,105 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.LeptonXLiteTheme": {
+      "version": "4.0.4",
+      "isInstalled": true
+    },
+    "Volo.Abp.Account": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.TenantManagement": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "9.0.3",
+      "isInstalled": true
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "9.0.3",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "IotDb.MeasurementManagement.Application": {
+      "path": "src/IotDb.MeasurementManagement.Application/IotDb.MeasurementManagement.Application.abppkg",
+      "folder": "src"
+    },
+    "IotDb.MeasurementManagement.Application.Tests": {
+      "path": "test/IotDb.MeasurementManagement.Application.Tests/IotDb.MeasurementManagement.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "IotDb.MeasurementManagement.Domain.Shared": {
+      "path": "src/IotDb.MeasurementManagement.Domain.Shared/IotDb.MeasurementManagement.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "IotDb.MeasurementManagement.Application.Contracts": {
+      "path": "src/IotDb.MeasurementManagement.Application.Contracts/IotDb.MeasurementManagement.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "IotDb.MeasurementManagement.HttpApi": {
+      "path": "src/IotDb.MeasurementManagement.HttpApi/IotDb.MeasurementManagement.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "IotDb.MeasurementManagement.HttpApi.Client": {
+      "path": "src/IotDb.MeasurementManagement.HttpApi.Client/IotDb.MeasurementManagement.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "IotDb.MeasurementManagement.Web": {
+      "path": "src/IotDb.MeasurementManagement.Web/IotDb.MeasurementManagement.Web.abppkg",
+      "folder": "src"
+    },
+    "IotDb.MeasurementManagement.Web.Tests": {
+      "path": "test/IotDb.MeasurementManagement.Web.Tests/IotDb.MeasurementManagement.Web.Tests.abppkg",
+      "folder": "test"
+    },
+    "IotDb.MeasurementManagement.EntityFrameworkCore.Tests": {
+      "path": "test/IotDb.MeasurementManagement.EntityFrameworkCore.Tests/IotDb.MeasurementManagement.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "IotDb.MeasurementManagement.EntityFrameworkCore": {
+      "path": "src/IotDb.MeasurementManagement.EntityFrameworkCore/IotDb.MeasurementManagement.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "IotDb.MeasurementManagement.TestBase": {
+      "path": "test/IotDb.MeasurementManagement.TestBase/IotDb.MeasurementManagement.TestBase.abppkg",
+      "folder": "test"
+    },
+    "IotDb.MeasurementManagement.Domain.Tests": {
+      "path": "test/IotDb.MeasurementManagement.Domain.Tests/IotDb.MeasurementManagement.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "IotDb.MeasurementManagement.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/IotDb.MeasurementManagement.HttpApi.Client.ConsoleTestApp/IotDb.MeasurementManagement.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "IotDb.MeasurementManagement.DbMigrator": {
+      "path": "src/IotDb.MeasurementManagement.DbMigrator/IotDb.MeasurementManagement.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "IotDb.MeasurementManagement.Domain": {
+      "path": "src/IotDb.MeasurementManagement.Domain/IotDb.MeasurementManagement.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}
