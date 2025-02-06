@@ -1,0 +1,13 @@
+﻿{
+  "applications": {
+    "IotDb.MeasurementManagement.Web": {
+      "type": "dotnet-project",
+      "launchUrl": "https://localhost:44338",
+      "path": "../../../src/IotDb.MeasurementManagement.Web/IotDb.MeasurementManagement.Web.csproj",
+      "kubernetesService": ".*-web$",
+      "execution": {
+        "order": 2
+      }
+    }
+  }
+}
