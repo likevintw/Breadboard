@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using IotDb.MeasurementManagement.IotDb;
-using Microsoft.Extensions.Logging;
 using Volo.Abp.Application.Dtos;
 
 namespace IotDb.MeasurementManagement.SoilMoisture
@@ -24,7 +23,7 @@ namespace IotDb.MeasurementManagement.SoilMoisture
             }
             List<SoilMoisture> list = await _queryService.GetPageByTime(request.StartDateTime, request.EndDateTime, request.Page.SkipCount, request.Page.MaxResultCount);
             List<SoilMoistureDto> dtos = ObjectMapper.Map<List<SoilMoisture>, List<SoilMoistureDto>>(list);
-            return new PagedResultDto<SoilMoistureDto>(request.Page.MaxResultCount, dtos);
+            return new PagedResultDto<SoilMoistureDto>(dtos.Count, dtos);
         }
     }
 }

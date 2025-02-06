@@ -5,10 +5,10 @@ namespace IotDb.MeasurementManagement.Cpu
 {
     public class CpuLoad : AbstractIotDb
     {
-        public DateTime Time { get; set; }
-        public required string Timeseries { get; set; }
-        public float Value { get; set; }
+        public static string Measurement => "cpu";
 
-        protected override string Measurement => "cpu";
+        public DateTime Time { get; set; }
+        public string Timeseries { get; set; }
+        public float Value { get; set; }
     }
 }
