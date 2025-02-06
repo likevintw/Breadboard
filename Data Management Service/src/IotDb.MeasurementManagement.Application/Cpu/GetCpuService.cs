@@ -24,7 +24,7 @@ namespace IotDb.MeasurementManagement.Cpu
 
             var list = await domainService.GetPageByTime(request.StartDateTime, request.EndDateTime, request.Page.SkipCount, request.Page.MaxResultCount);
             var dto = ObjectMapper.Map<List<CpuLoad>, List<CpuLoadDto>>(list);
-            return new PagedResultDto<CpuLoadDto>(request.Page.MaxResultCount, dto);
+            return new PagedResultDto<CpuLoadDto>(dto.Count, dto);
         }
     }
 }

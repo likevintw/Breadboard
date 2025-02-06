@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using Xunit;
+﻿using Xunit;
 
 namespace IotDb.MeasurementManagement.IotDb
 {
@@ -22,7 +16,15 @@ namespace IotDb.MeasurementManagement.IotDb
         {
             var session = iotDbConnection.GetSessionPool("localhost", 6667, 5);
             Assert.NotNull(session);
-            Assert.True(true==session.IsOpen());
+            Assert.True(true == session.IsOpen());
+        }
+
+        [Fact]
+        public void GetSessionWithoutParamTest()
+        {
+            var session = iotDbConnection.GetSessionPool();
+            Assert.NotNull(session);
+            Assert.True(true == session.IsOpen());
         }
     }
 }

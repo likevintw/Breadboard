@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IotDb.MeasurementManagement.IotDb
+﻿namespace IotDb.MeasurementManagement.IotDb
 {
-    public abstract class AbstractIotDb
+    public interface AbstractIotDb
     {
-        protected abstract string Measurement { get; }
+        public static abstract string Measurement { get; }
     }
 }

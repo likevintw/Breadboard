@@ -1,11 +1,15 @@
 ﻿using Apache.IoTDB;
+using Volo.Abp.DependencyInjection;
 
 namespace IotDb.MeasurementManagement.IotDb
 {
-    public class ConnectionService : IIotDbConnection
+    public class ConnectionService : IIotDbConnection, ISingletonDependency
     {
+        private const string defaultHost = "172.23.69.174";
+        private const int defaultPort = 6667;
+        private const int defaultPoolSize = 5;
         private SessionPool? sessionPool;
-        SessionPool IIotDbConnection.GetSessionPool(string host= "172.23.69.174", int port=6667, int poolSize=5)
+        public SessionPool GetSessionPool(string host = defaultHost, int port = defaultPort, int poolSize = defaultPoolSize)
         {
 
             if (sessionPool != null)
@@ -16,16 +20,18 @@ namespace IotDb.MeasurementManagement.IotDb
                 }
                 return sessionPool;
             }
-            //const string hostSetting = host??"172.23.69.174";
-            //const int portSetting = port??6667;
-            //const int poolSize = 5;
-            SessionPool session = new SessionPool(host, port, poolSize);
+            SessionPool session = new(host, port, poolSize);
 
             // Open Session
             session.Open(false).Wait();
 
             sessionPool = session;
             return session;
+        }
+
+        public SessionPool GetSessionPool()
+        {
+            return GetSessionPool(defaultHost, defaultPort);
         }
     }
 }
