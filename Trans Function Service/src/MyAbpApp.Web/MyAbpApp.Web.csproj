@@ -58,6 +58,8 @@
     <ProjectReference Include="..\MyAbpApp.Application.Contracts\MyAbpApp.Application.Contracts.csproj" />
     <ProjectReference Include="..\MyAbpApp.IotDbEntityFrameworkCore\MyAbpApp.IotDbEntityFrameworkCore.csproj" />
     <ProjectReference Include="..\MyAbpApp.NatsEntityFrameworkCore\MyAbpApp.NatsEntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\MyAbpApp.IotDb\MyAbpApp.IotDb.csproj" />
+    <ProjectReference Include="..\MyAbpApp.Nats\MyAbpApp.Nats.csproj" />
   </ItemGroup>
 
   <ItemGroup>
