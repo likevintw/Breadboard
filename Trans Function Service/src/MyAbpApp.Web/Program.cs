@@ -5,8 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
-using MyAbpApp.Sensors;
-using MyAbpApp.Web.Controllers;
+
 namespace MyAbpApp.Web;
 
 public class Program
