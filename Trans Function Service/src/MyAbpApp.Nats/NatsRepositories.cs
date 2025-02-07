@@ -33,7 +33,6 @@ namespace MyAbpApp.NatsRepositories
                     Password = password,
                 }
             });
-
             _percentageWorkerChannel = Channel.CreateUnbounded<double>();
         }
         ~NatsRepository()
@@ -52,17 +51,23 @@ namespace MyAbpApp.NatsRepositories
 
             await Task.Delay(int.MaxValue);
 
-            ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
+            async ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
                 // todo, if not 1>=msg.Data>=-1, return fail
-                return msg.ReplyAsync($"{msg.Data * 100}");
-                _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
+                await _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
+                await msg.ReplyAsync($"{msg.Data * 100}");
+                _percentageWorkerChannel.Writer.Complete(); // 完成寫入
             }
         }
-        public Channel<double> GetPercentageWorkChannel()
+        public async Task<double> GetPercentageWorkerValue()
         {
-            return _percentageWorkerChannel;
+            await foreach (var item in _percentageWorkerChannel.Reader.ReadAllAsync())
+            {
+                Console.WriteLine($"\t消費者讀取: {item}");
+                break;
+            }
+            return 0.0;
         }
     }
 }

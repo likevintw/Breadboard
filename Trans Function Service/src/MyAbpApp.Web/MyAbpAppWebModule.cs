@@ -60,8 +60,7 @@ using MyAbpApp.IIotRepositories;
 using MyAbpApp.IoTDbRepositories;
 using MyAbpApp.IQueueRepositories;
 using MyAbpApp.NatsRepositories;
-using MyAbpApp.ICpqServices;
-using MyAbpApp.CpqServices;
+using MyAbpApp.NatsEventHandlers;
 namespace MyAbpApp.Web;
 
 [DependsOn(
@@ -128,8 +127,7 @@ public class MyAbpAppWebModule : AbpModule
         context.Services.AddSingleton<IGyroscopeService, GyroscopeService>();
         context.Services.AddSingleton<IIotRepository, IoTDbRepository>();
         context.Services.AddSingleton<IQueueRepository, NatsRepository>();
-        context.Services.AddSingleton<ICpqService, CpqService>();
-        context.Services.AddHostedService<CpqService>();
+        context.Services.AddHostedService<NatsEventHandler>();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 

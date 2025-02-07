@@ -37,7 +37,7 @@ class Program
             result = await nc.RequestAsync<double, double>(subject: $"{serviceName}.{functionName}", data: i);
             Console.WriteLine($"{i} got reply: {result.Data}");
             Console.WriteLine("data type: " + result.Data.GetType());
-            await Task.Delay(100);
+            await Task.Delay(1000);
         }
         Console.WriteLine("Bye!");
     }
@@ -74,6 +74,6 @@ class Program
     }
     public static async Task Main(string[] args)
     {
-        CreatePercentageProducer();
+        await CreatePercentageProducer();
     }
 }
