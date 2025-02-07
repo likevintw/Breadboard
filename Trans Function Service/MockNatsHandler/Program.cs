@@ -32,12 +32,12 @@ class Program
 
         var result = await nc.RequestAsync<double, double>(subject: $"{serviceName}.{functionName}", data: 0);
 
-        for (double i = 1; i < 100; i++)
+        for (double i = 1; i < 150; i++)
         {
             result = await nc.RequestAsync<double, double>(subject: $"{serviceName}.{functionName}", data: i);
             Console.WriteLine($"{i} got reply: {result.Data}");
             Console.WriteLine("data type: " + result.Data.GetType());
-            await Task.Delay(1000);
+            await Task.Delay(100);
         }
         Console.WriteLine("Bye!");
     }

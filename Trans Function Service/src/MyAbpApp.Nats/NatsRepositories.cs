@@ -7,6 +7,8 @@ using NATS.Client.Services;
 using NATS.Client.JetStream;
 using NATS.Client.JetStream.Models;
 using NATS.Client.Serializers.Json;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 using MyAbpApp.IQueueRepositories;
 
 namespace MyAbpApp.NatsRepositories
@@ -14,6 +16,7 @@ namespace MyAbpApp.NatsRepositories
     public class NatsRepository : IQueueRepository
     {
         private readonly NatsClient _Client;
+        private Channel<double> _percentageWorkerChannel;
 
         public NatsRepository()
         {
@@ -30,6 +33,8 @@ namespace MyAbpApp.NatsRepositories
                     Password = password,
                 }
             });
+
+            _percentageWorkerChannel = Channel.CreateUnbounded<double>();
         }
         ~NatsRepository()
         {
@@ -37,50 +42,27 @@ namespace MyAbpApp.NatsRepositories
         public async Task CreatePercentageWorker(string serviceName, string functionName, string serviceVersion, string serviceDescription)
         {
             var svc = _Client.CreateServicesContext();
-
             var service = await svc.AddServiceAsync(new NatsSvcConfig(serviceName, serviceVersion)
             {
                 Description = serviceDescription
             });
-
             var root = await service.AddGroupAsync(serviceName, serviceVersion);
-
             await root.AddEndpointAsync(ReturnPercentage, functionName, serializer: NatsJsonSerializer<double>.Default);
             Console.WriteLine($"add {serviceName} service, version {serviceVersion}");
 
-
             await Task.Delay(int.MaxValue);
-
 
             ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
                 // todo, if not 1>=msg.Data>=-1, return fail
                 return msg.ReplyAsync($"{msg.Data * 100}");
+                _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
             }
         }
-        public async Task CreateServiceHoneywellCe3245(
-           string ServiceName, string FunctionName, string ServiceVersion, string ServiceDescription)
+        public Channel<double> GetPercentageWorkChannel()
         {
-            var svc = _Client.CreateServicesContext();
-
-            var inputService = await svc.AddServiceAsync(new NatsSvcConfig(ServiceName, ServiceVersion)
-            {
-                Description = ServiceDescription
-            });
-            var root = await inputService.AddGroupAsync(ServiceName, ServiceVersion);
-            await root.AddEndpointAsync(GetHoneywell_ce3245Compensation, FunctionName, serializer: NatsJsonSerializer<double>.Default);
-            Console.WriteLine($"add {ServiceName} service, version {ServiceVersion}");
-
-            await Task.Delay(int.MaxValue);
-
-
-            ValueTask GetHoneywell_ce3245Compensation(NatsSvcMsg<double> msg)
-            {
-                Console.WriteLine($"show on worker {msg.Data}");
-                //todo, to go pg
-                return msg.ReplyAsync($"{msg.Data * 100}");
-            }
+            return _percentageWorkerChannel;
         }
     }
 }
