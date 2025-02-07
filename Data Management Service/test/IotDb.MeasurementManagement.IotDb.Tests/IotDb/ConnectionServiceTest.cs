@@ -1,4 +1,6 @@
 ﻿using IotDb.MeasurementManagement.IotDb;
+using IotDb.MeasurementManagement.IotDb.IotDb;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace IotDb.MeasurementManagement.Tests.IotDb
@@ -9,7 +11,8 @@ namespace IotDb.MeasurementManagement.Tests.IotDb
 
         public ConnectionServiceTest()
         {
-            this.iotDbConnection = new ConnectionService();
+            IOptions<IoTDBOptions> option = Options.Create(new IoTDBOptions() { Host = "localhost", Password = "root", PoolSize = 5, Port = 6667, Username = "root" });
+            this.iotDbConnection = new ConnectionService(option);
         }
 
         [Fact]

@@ -8,9 +8,9 @@ namespace IotDb.MeasurementManagement.Cpu
 {
     public class GetCpuService : MeasurementManagementAppService, IGetCpuService
     {
-        private readonly IIotDbQueryRepository<CpuLoad> repository;
+        private readonly IIotDbRepository<CpuLoad> repository;
 
-        public GetCpuService(IIotDbQueryRepository<CpuLoad> repository)
+        public GetCpuService(IIotDbRepository<CpuLoad> repository)
         {
             this.repository = repository;
         }

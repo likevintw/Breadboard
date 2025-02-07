@@ -32,8 +32,7 @@ public class MeasurementManagementIotDbModule : AbpModule
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddTransient(typeof(IIotDbQueryRepository<>), typeof(IotDbQueryRepository<>));
-        context.Services.AddTransient(typeof(IIotDbInsertRepository<>), typeof(IotDbInsertRepository<>));
+        context.Services.AddTransient(typeof(IIotDbRepository<>), typeof(IotDbRepository<>));
         var configuration = context.Services.GetConfiguration();
         Configure<IoTDBOptions>(configuration.GetSection("IoTDB"));
         //context.Services.AddAbpDbContext<MeasurementManagementDbContext>(options =>
