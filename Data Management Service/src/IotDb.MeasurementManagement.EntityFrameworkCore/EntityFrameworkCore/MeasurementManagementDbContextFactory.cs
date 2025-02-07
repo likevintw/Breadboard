@@ -28,7 +28,7 @@ public class MeasurementManagementDbContextFactory : IDesignTimeDbContextFactory
     private static IConfigurationRoot BuildConfiguration()
     {
         var builder = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../AbstractIotDb.MeasurementManagement.DbMigrator/"))
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../IotDb.MeasurementManagement.DbMigrator/"))
             .AddJsonFile("appsettings.json", optional: false);
 
         return builder.Build();

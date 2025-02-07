@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 
-namespace IotDb.MeasurementManagement.SoilMoisture
+namespace IotDb.MeasurementManagement.Moisture
 {
     public class GetSoilMoistureByTimeRequest
     {

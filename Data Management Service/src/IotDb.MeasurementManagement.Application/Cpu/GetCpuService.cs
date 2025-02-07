@@ -8,11 +8,11 @@ namespace IotDb.MeasurementManagement.Cpu
 {
     public class GetCpuService : MeasurementManagementAppService, IGetCpuService
     {
-        private readonly IIotDbQueryService<CpuLoad> domainService;
+        private readonly IIotDbQueryRepository<CpuLoad> repository;
 
-        public GetCpuService(CpuDomainService domainService)
+        public GetCpuService(IIotDbQueryRepository<CpuLoad> repository)
         {
-            this.domainService = domainService;
+            this.repository = repository;
         }
 
         public async Task<PagedResultDto<CpuLoadDto>> GetCpuPageByTime(GetCpuPageByTimeRequest request)
@@ -22,7 +22,7 @@ namespace IotDb.MeasurementManagement.Cpu
                 throw new ArgumentOutOfRangeException("StartDateTime date time", "StartDateTime is after EndDateTime.");
             }
 
-            var list = await domainService.GetPageByTime(request.StartDateTime, request.EndDateTime, request.Page.SkipCount, request.Page.MaxResultCount);
+            var list = await repository.GetPageByTime(request.StartDateTime, request.EndDateTime, request.Page.SkipCount, request.Page.MaxResultCount);
             var dto = ObjectMapper.Map<List<CpuLoad>, List<CpuLoadDto>>(list);
             return new PagedResultDto<CpuLoadDto>(dto.Count, dto);
         }

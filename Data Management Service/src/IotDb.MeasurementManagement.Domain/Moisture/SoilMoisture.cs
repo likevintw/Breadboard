@@ -1,7 +1,7 @@
 ﻿using System;
 using IotDb.MeasurementManagement.IotDb;
 
-namespace IotDb.MeasurementManagement.SoilMoisture
+namespace IotDb.MeasurementManagement.Moisture
 {
     public class SoilMoisture : AbstractIotDb
     {
