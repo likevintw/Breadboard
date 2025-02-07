@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace IotDb.MeasurementManagement.IotDb
 {
-    public interface IIotDbQueryRepository<T>
+    public interface IIotDbRepository<T>
     {
         Task<List<T>> GetPageByTime(DateTime start, DateTime end, int skip, int totalCount);
+        Task<int> Insert(T t);
     }
 }

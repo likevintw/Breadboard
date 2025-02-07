@@ -2,23 +2,22 @@
 using Apache.IoTDB.DataStructure;
 using IotDb.MeasurementManagement.IotDb;
 using Microsoft.Extensions.Logging;
-using Volo.Abp.Domain.Services;
 
 namespace IotDb.MeasurementManagement.Cpu
 {
-    public class IotDbQueryRepository<T> : IIotDbQueryRepository<T> where T : AbstractIotDb, new()
+    public class IotDbRepository<T> : IIotDbRepository<T> where T : AbstractIotDb, new()
     {
         private readonly IIotDbConnection iotDbConnection;
         private const string device = "root.device1";
-        private readonly ILogger<IotDbQueryRepository<T>> logger;
+        private readonly ILogger<IotDbRepository<T>> logger;
 
-        public IotDbQueryRepository(ConnectionService iotDbConnection, ILogger<IotDbQueryRepository<T>> logger)
+        public IotDbRepository(ConnectionService iotDbConnection, ILogger<IotDbRepository<T>> logger)
         {
             this.iotDbConnection = iotDbConnection;
             this.logger = logger;
         }
 
-        Task<List<T>> IIotDbQueryRepository<T>.GetPageByTime(DateTime start, DateTime end, int skip, int totalCount)
+        Task<List<T>> IIotDbRepository<T>.GetPageByTime(DateTime start, DateTime end, int skip, int totalCount)
         {
             SessionPool sessionPool = iotDbConnection.GetSessionPool();
             DateTimeOffset startOffset = DateTime.SpecifyKind(start, DateTimeKind.Utc);
@@ -43,6 +42,12 @@ namespace IotDb.MeasurementManagement.Cpu
                 result.Add(entity);
             }
             return Task.FromResult(result);
+        }
+        public async Task<int> Insert(T t)
+        {
+            SessionPool sessionPool = iotDbConnection.GetSessionPool();
+            int rtn = await sessionPool.InsertAlignedRecordAsync("root.device1", new RowRecord(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), [2F], [T.Measurement]));
+            return rtn;
         }
     }
 }

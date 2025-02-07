@@ -8,9 +8,9 @@ namespace IotDb.MeasurementManagement.Moisture
 {
     public class GetSoilMoistureService : MeasurementManagementAppService, IQuerySoilMoistureService
     {
-        private readonly IIotDbQueryRepository<SoilMoisture> repository;
+        private readonly IIotDbRepository<SoilMoisture> repository;
 
-        public GetSoilMoistureService(IIotDbQueryRepository<SoilMoisture> repository)
+        public GetSoilMoistureService(IIotDbRepository<SoilMoisture> repository)
         {
             this.repository = repository;
         }
