@@ -1,5 +1,6 @@
 using IotDb.MeasurementManagement.Cpu;
 using IotDb.MeasurementManagement.IotDb;
+using IotDb.MeasurementManagement.IotDb.IotDb;
 using IotDb.MeasurementManagement.Moisture;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
@@ -31,8 +32,9 @@ public class MeasurementManagementIotDbModule : AbpModule
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddTransient<IIotDbQueryRepository<CpuLoad>, IotDbQueryRepository<CpuLoad>>();
-        context.Services.AddTransient<IIotDbQueryRepository<SoilMoisture>, IotDbQueryRepository<SoilMoisture>>();
+        context.Services.AddTransient(typeof(IIotDbRepository<>), typeof(IotDbRepository<>));
+        var configuration = context.Services.GetConfiguration();
+        Configure<IoTDBOptions>(configuration.GetSection("IoTDB"));
         //context.Services.AddAbpDbContext<MeasurementManagementDbContext>(options =>
         //{
         //        /* Remove "includeAllEntities: true" to create
