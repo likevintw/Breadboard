@@ -24,7 +24,7 @@ namespace IotDb.MeasurementManagement.Cpu
             DateTimeOffset startOffset = DateTime.SpecifyKind(start, DateTimeKind.Utc);
             DateTimeOffset endOffset = DateTime.SpecifyKind(end, DateTimeKind.Utc);
 
-            string script = $"Select {CpuLoad.Measurement} from {device} " +
+            string script = $"Select {T.Measurement} from {device} " +
                 $"where time between {startOffset.ToUnixTimeMilliseconds()} and {endOffset.ToUnixTimeMilliseconds()} " +
                 $"limit {totalCount} offset {skip} ";
 

@@ -1,15 +1,28 @@
 ﻿using Apache.IoTDB;
+using IotDb.MeasurementManagement.IotDb.IotDb;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Polly;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Modularity;
 
 namespace IotDb.MeasurementManagement.IotDb
 {
     public class ConnectionService : IIotDbConnection, ISingletonDependency
     {
-        private const string defaultHost = "localhost";
-        private const int defaultPort = 6667;
-        private const int defaultPoolSize = 5;
+        private readonly string defaultHost;
+        private readonly int defaultPort;
+        private readonly int defaultPoolSize;
         private SessionPool? sessionPool;
-        public SessionPool GetSessionPool(string host = defaultHost, int port = defaultPort, int poolSize = defaultPoolSize)
+        private readonly IoTDBOptions iotDbOption;
+        public ConnectionService(IOptions<IoTDBOptions> options)
+        {
+            iotDbOption = options.Value;
+            defaultHost = iotDbOption.Host;
+            defaultPort = iotDbOption.Port;
+            defaultPoolSize = iotDbOption.PoolSize;
+        }
+        public SessionPool GetSessionPool(string host = "localhost", int port = 6667, int poolSize = 5)
         {
 
             if (sessionPool != null)
@@ -31,7 +44,7 @@ namespace IotDb.MeasurementManagement.IotDb
 
         public SessionPool GetSessionPool()
         {
-            return GetSessionPool(defaultHost, defaultPort);
+            return GetSessionPool(defaultHost, defaultPort, defaultPoolSize);
         }
     }
 }

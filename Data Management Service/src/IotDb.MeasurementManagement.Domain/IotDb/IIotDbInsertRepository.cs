@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IotDb.MeasurementManagement.IotDb
 {
-    public interface IIotInsertRepository<T>
+    public interface IIotDbInsertRepository<T>
     {
         public Task<int> Insert(T t);
     }

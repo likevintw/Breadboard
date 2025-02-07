@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\IotDb.MeasurementManagement.IotDb\IotDb.MeasurementManagement.IotDb.csproj" />
+    <ProjectReference Include="..\IotDb.MeasurementManagement.TestBase\IotDb.MeasurementManagement.TestBase.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

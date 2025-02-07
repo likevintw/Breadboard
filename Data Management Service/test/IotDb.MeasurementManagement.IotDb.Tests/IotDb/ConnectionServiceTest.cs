@@ -1,6 +1,7 @@
-﻿using Xunit;
+﻿using IotDb.MeasurementManagement.IotDb;
+using Xunit;
 
-namespace IotDb.MeasurementManagement.IotDb
+namespace IotDb.MeasurementManagement.Tests.IotDb
 {
     public class ConnectionServiceTest
     {
