@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 
-namespace IotDb.MeasurementManagement.SoilMoisture
+namespace IotDb.MeasurementManagement.Moisture
 {
     public class SoilMoistureAutoMapperProfile: Profile
     {

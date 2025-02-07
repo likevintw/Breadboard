@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using IotDb.MeasurementManagement.EntityFrameworkCore;
+using IotDb.MeasurementManagement.IotDb;
 using IotDb.MeasurementManagement.Localization;
 using IotDb.MeasurementManagement.MultiTenancy;
 using IotDb.MeasurementManagement.Permissions;
@@ -56,6 +57,7 @@ namespace IotDb.MeasurementManagement.Web;
     typeof(MeasurementManagementHttpApiModule),
     typeof(MeasurementManagementApplicationModule),
     typeof(MeasurementManagementEntityFrameworkCoreModule),
+    typeof(MeasurementManagementIotDbModule),
     typeof(AbpAutofacModule),
     typeof(AbpStudioClientAspNetCoreModule),
     typeof(AbpIdentityWebModule),
@@ -81,7 +83,8 @@ public class MeasurementManagementWebModule : AbpModule
                 typeof(MeasurementManagementDomainSharedModule).Assembly,
                 typeof(MeasurementManagementApplicationModule).Assembly,
                 typeof(MeasurementManagementApplicationContractsModule).Assembly,
-                typeof(MeasurementManagementWebModule).Assembly
+                typeof(MeasurementManagementWebModule).Assembly,
+                typeof(MeasurementManagementIotDbModule).Assembly
             );
         });
 
