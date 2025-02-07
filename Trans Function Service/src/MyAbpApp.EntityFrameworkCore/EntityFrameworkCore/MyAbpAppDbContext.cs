@@ -15,6 +15,7 @@ using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using MyAbpApp.Products;
+using MyAbpApp.Compensations;
 
 namespace MyAbpApp.EntityFrameworkCore;
 
@@ -58,6 +59,7 @@ public class MyAbpAppDbContext :
 
     #endregion
     public DbSet<Product> Products { get; set; }
+    public DbSet<Compensation> Compensations { get; set; }
     public MyAbpAppDbContext(DbContextOptions<MyAbpAppDbContext> options)
         : base(options)
     {
