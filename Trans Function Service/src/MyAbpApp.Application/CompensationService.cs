@@ -14,7 +14,7 @@ namespace MyAbpApp.Compensations
         private readonly IRepository<Product, Guid> _productRepository;
 
         // 構造函數，注入 Product repository
-        public ProductAppService(IRepository<Product, Guid> productRepository)
+        public CompensationService(IRepository<Product, Guid> productRepository)
         {
             _productRepository = productRepository;
         }
