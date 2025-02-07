@@ -5,7 +5,7 @@ namespace IotDb.MeasurementManagement.IotDb
 {
     public class ConnectionService : IIotDbConnection, ISingletonDependency
     {
-        private const string defaultHost = "172.23.69.174";
+        private const string defaultHost = "localhost";
         private const int defaultPort = 6667;
         private const int defaultPoolSize = 5;
         private SessionPool? sessionPool;

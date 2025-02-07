@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 using IotDb.MeasurementManagement.IotDb;
 using Volo.Abp.Application.Dtos;
 
-namespace IotDb.MeasurementManagement.SoilMoisture
+namespace IotDb.MeasurementManagement.Moisture
 {
     public class GetSoilMoistureService : MeasurementManagementAppService, IQuerySoilMoistureService
     {
-        private readonly IIotDbQueryService<SoilMoisture> _queryService;
+        private readonly IIotDbQueryRepository<SoilMoisture> repository;
 
-        public GetSoilMoistureService(SoilMoistureDomainService service)
+        public GetSoilMoistureService(IIotDbQueryRepository<SoilMoisture> repository)
         {
-            _queryService = service;
+            this.repository = repository;
         }
 
         public async Task<PagedResultDto<SoilMoistureDto>> GetBySoilMoisturePageByTime(GetSoilMoistureByTimeRequest request)
@@ -21,7 +21,7 @@ namespace IotDb.MeasurementManagement.SoilMoisture
             {
                 throw new ArgumentOutOfRangeException("StartDateTime date time", "StartDateTime date time is after end date time.");
             }
-            List<SoilMoisture> list = await _queryService.GetPageByTime(request.StartDateTime, request.EndDateTime, request.Page.SkipCount, request.Page.MaxResultCount);
+            List<SoilMoisture> list = await repository.GetPageByTime(request.StartDateTime, request.EndDateTime, request.Page.SkipCount, request.Page.MaxResultCount);
             List<SoilMoistureDto> dtos = ObjectMapper.Map<List<SoilMoisture>, List<SoilMoistureDto>>(list);
             return new PagedResultDto<SoilMoistureDto>(dtos.Count, dtos);
         }

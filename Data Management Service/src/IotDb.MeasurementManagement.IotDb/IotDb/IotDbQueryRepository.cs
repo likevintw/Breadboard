@@ -1,46 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Apache.IoTDB;
+﻿using Apache.IoTDB;
 using Apache.IoTDB.DataStructure;
 using IotDb.MeasurementManagement.IotDb;
+using Microsoft.Extensions.Logging;
 using Volo.Abp.Domain.Services;
 
 namespace IotDb.MeasurementManagement.Cpu
 {
-    public class CpuDomainService : DomainService, IIotDbQueryService<CpuLoad>
+    public class IotDbQueryRepository<T> : IIotDbQueryRepository<T> where T : AbstractIotDb, new()
     {
         private readonly IIotDbConnection iotDbConnection;
         private const string device = "root.device1";
+        private readonly ILogger<IotDbQueryRepository<T>> logger;
 
-        public CpuDomainService(ConnectionService iotDbConnection)
+        public IotDbQueryRepository(ConnectionService iotDbConnection, ILogger<IotDbQueryRepository<T>> logger)
         {
             this.iotDbConnection = iotDbConnection;
+            this.logger = logger;
         }
 
-        public CpuDomainService()
-        {
-        }
-
-        public Task<List<CpuLoad>> GetPageByTime(DateTime start, DateTime end, int skip, int totalCount)
+        Task<List<T>> IIotDbQueryRepository<T>.GetPageByTime(DateTime start, DateTime end, int skip, int totalCount)
         {
             SessionPool sessionPool = iotDbConnection.GetSessionPool();
             DateTimeOffset startOffset = DateTime.SpecifyKind(start, DateTimeKind.Utc);
             DateTimeOffset endOffset = DateTime.SpecifyKind(end, DateTimeKind.Utc);
-            SessionDataSet dataSet = sessionPool.ExecuteQueryStatementAsync($"Select * from {device}.{CpuLoad.Measurement} " +
+
+            string script = $"Select {CpuLoad.Measurement} from {device} " +
                 $"where time between {startOffset.ToUnixTimeMilliseconds()} and {endOffset.ToUnixTimeMilliseconds()} " +
-                $"limit {totalCount} offset {skip} ").Result;
-            List<CpuLoad> result = new();
+                $"limit {totalCount} offset {skip} ";
+
+            logger.LogDebug(script);
+            SessionDataSet dataSet = sessionPool.ExecuteQueryStatementAsync(script).Result;
+            List<T> result = new();
             while (dataSet.HasNext())
             {
                 RowRecord record = dataSet.Next();
-                CpuLoad entity = new()
+                T entity = new()
                 {
                     Time = record.GetDateTime(),
-                    Timeseries = $"{device}.{CpuLoad.Measurement}",
+                    Timeseries = record.Measurements[0],
                     Value = (float)record.Values[0]
                 };
-
+                result.Add(entity);
             }
             return Task.FromResult(result);
         }

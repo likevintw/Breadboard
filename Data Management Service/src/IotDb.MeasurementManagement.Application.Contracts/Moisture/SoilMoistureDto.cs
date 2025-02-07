@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IotDb.MeasurementManagement.SoilMoisture
+namespace IotDb.MeasurementManagement.Moisture
 {
     public class SoilMoistureDto
     {
