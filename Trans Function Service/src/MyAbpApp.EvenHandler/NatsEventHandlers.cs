@@ -18,12 +18,12 @@ namespace MyAbpApp.NatsEventHandlers
 {
     public class NatsEventHandler : IHostedService
     {
-        private readonly IQueueRepository _queueRepository;
-        private readonly IIotRepository _iotRepository;
+        private IQueueRepository? _queueRepository;
+        private IIotRepository? _iotRepository;
         IRepository<Product, Guid> _productRepository;
         private Channel<double> _percentageWorkerChannel;
-        private Task _backgroundTask;
-        private CancellationTokenSource _cts;
+        private Task? _backgroundTask;
+        private CancellationTokenSource? _cts;
 
         public NatsEventHandler(
             IQueueRepository queueRepository,
@@ -85,7 +85,7 @@ namespace MyAbpApp.NatsEventHandlers
             {
                 double value = 0.0;
                 // 改成有限次數循環而不是無窮循環
-                value = await _queueRepository.GetPercentageWorkerValue(cancellationToken);
+                value = await _queueRepository?.GetPercentageWorkerValue(cancellationToken);
                 Console.WriteLine($"SubPercentageChannel got {value}");
 
                 await Task.Delay(2000, cancellationToken);  // 等待2秒
