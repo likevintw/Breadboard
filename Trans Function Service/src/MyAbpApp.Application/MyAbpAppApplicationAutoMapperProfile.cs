@@ -1,6 +1,7 @@
 using AutoMapper;
 using MyAbpApp.Compensations;
 using MyAbpApp.CompensationDtos;
+using System.Collections.Generic;
 namespace MyAbpApp;
 
 public class MyAbpAppApplicationAutoMapperProfile : Profile
