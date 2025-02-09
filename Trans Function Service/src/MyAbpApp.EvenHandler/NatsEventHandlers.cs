@@ -31,30 +31,35 @@ namespace MyAbpApp.NatsEventHandlers
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine($"Run Background Process");
-            Task.Run(() => _queueRepository.CreatePercentageWorker("Percentager", "ReturnPercentage", "1.0.1", "transfer to percentage"));
-            await _queueRepository.GetPercentageWorkerValue();
-            Console.WriteLine($"Run Background Process END");
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                Console.WriteLine($"Run Background Process");
+                Task.Run(() => _queueRepository.CreatePercentageWorker(
+                    cancellationToken, "Percentager", "ReturnPercentage", "1.0.1", "transfer to percentage"));
+                await _queueRepository.GetPercentageWorkerValue(cancellationToken);
+                Console.WriteLine($"Run Background Process END");
+            }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             // 停止背景任務的邏輯
+            await Task.Delay(1);
         }
 
-        public async Task SubPercentageChannel()
+        public async Task SubPercentageChannel(CancellationToken cancellationToken)
         {
-            double value = 0.0;
-            Console.WriteLine($"2222222222");
-            while (true)  // Infinite loop
+            while (!cancellationToken.IsCancellationRequested)
             {
-                // value = _queueRepository.GetPercentageWorkerValue();
-                // Console.WriteLine($"SubPercentageChannel got {value}");
-                await _queueRepository.GetPercentageWorkerValue();
-                await Task.Delay(2000);
+                // double value = 0.0;
+                while (true)  // Infinite loop
+                {
+                    // value = _queueRepository.GetPercentageWorkerValue();
+                    // Console.WriteLine($"SubPercentageChannel got {value}");
+                    await _queueRepository.GetPercentageWorkerValue(cancellationToken);
+                    await Task.Delay(2000);
+                }
             }
-
-            Console.WriteLine($"33333333");
         }
 
     }

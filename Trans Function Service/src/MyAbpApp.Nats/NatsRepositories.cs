@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using NATS.Net;
 using NATS.Client.Core;
@@ -38,54 +39,72 @@ namespace MyAbpApp.NatsRepositories
         ~NatsRepository()
         {
         }
-        public async Task CreatePercentageWorker(string serviceName, string functionName, string serviceVersion, string serviceDescription)
+        public async Task CreatePercentageWorker(
+            CancellationToken cancellationToken, string serviceName, string functionName, string serviceVersion, string serviceDescription)
         {
             var svc = _Client.CreateServicesContext();
 
             Console.WriteLine("PPPPPPPPPP1111");
+
             var service = await svc.AddServiceAsync(new NatsSvcConfig(serviceName, serviceVersion)
             {
                 Description = serviceDescription
             });
 
             Console.WriteLine("PPPPPPPPPP22222");
+
             var root = await service.AddGroupAsync(serviceName, serviceVersion);
 
             Console.WriteLine("PPPPPPPPPP33333");
+
             await root.AddEndpointAsync(ReturnPercentage, functionName, serializer: NatsJsonSerializer<double>.Default);
+
             Console.WriteLine($"add {serviceName} service, version {serviceVersion}");
 
-            await Task.Delay(int.MaxValue);
+            try
+            {
+                // 使用 CancellationToken 在長時間等待時取消
+                await Task.Delay(int.MaxValue, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                // 當取消請求時，捕捉 OperationCanceledException 並處理取消邏輯
+                Console.WriteLine("CreatePercentageWorker was canceled.");
+            }
 
             async ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
-                // todo, if not 1>=msg.Data>=-1, return fail
+
+                // 假設需要檢查 msg.Data 是否在 -1 和 1 之間
+                if (msg.Data < -1 || msg.Data > 1)
+                {
+                    // 如果不在範圍內，則返回錯誤
+                    await msg.ReplyAsync("fail");
+                    return;
+                }
+
+                // 將數據寫入 channel
                 await _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
+
+                // 進行回覆
                 await msg.ReplyAsync($"{msg.Data * 100}");
-                // _percentageWorkerChannel.Writer.Complete(); // 關閉channel
             }
         }
-        // public async Task<double> GetPercentageWorkerValue()
-        // {
-        //     double value = 0;
-        //     while (true)
-        //     {
-        //         // 從 channel 讀取資料
-        //         value = await _percentageWorkerChannel.Reader.ReadAsync();
-        //         Console.WriteLine($"Value {value} read from channel.");
-        //         return value;
-        //     }
-        // }
-        public async Task GetPercentageWorkerValue()
+        // public aGetPercentageWorkerValue
+        public async Task GetPercentageWorkerValue(CancellationToken cancellationToken)
         {
             double value = 0;
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                // 從 channel 讀取資料
-                value = await _percentageWorkerChannel.Reader.ReadAsync();
-                Console.WriteLine($"Value {value} read from channel.");
+                while (true)
+                {
+                    // 從 channel 讀取資料
+                    value = await _percentageWorkerChannel.Reader.ReadAsync();
+                    Console.WriteLine($"Value {value} read from channel.");
+                }
             }
+
         }
     }
 }
