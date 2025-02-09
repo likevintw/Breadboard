@@ -7,6 +7,7 @@ namespace MyAbpApp.IQueueRepositories
     public interface IQueueRepository
     {
         Task CreatePercentageWorker(string serviceName, string functionName, string serviceVersion, string description);
-        Task<double> GetPercentageWorkerValue();
+        Task GetPercentageWorkerValue();
+        // Task<double> GetPercentageWorkerValue();
     }
 }

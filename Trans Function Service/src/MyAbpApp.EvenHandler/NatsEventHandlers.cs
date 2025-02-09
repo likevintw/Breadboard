@@ -33,7 +33,7 @@ namespace MyAbpApp.NatsEventHandlers
         {
             Console.WriteLine($"Run Background Process");
             Task.Run(() => _queueRepository.CreatePercentageWorker("Percentager", "ReturnPercentage", "1.0.1", "transfer to percentage"));
-            SubPercentageChannel();
+            await _queueRepository.GetPercentageWorkerValue();
             Console.WriteLine($"Run Background Process END");
         }
 
@@ -44,11 +44,13 @@ namespace MyAbpApp.NatsEventHandlers
 
         public async Task SubPercentageChannel()
         {
-
+            double value = 0.0;
             Console.WriteLine($"2222222222");
             while (true)  // Infinite loop
             {
-                Console.WriteLine($"SubPercentageChannel got {_queueRepository.GetPercentageWorkerValue()}");
+                // value = _queueRepository.GetPercentageWorkerValue();
+                // Console.WriteLine($"SubPercentageChannel got {value}");
+                await _queueRepository.GetPercentageWorkerValue();
                 await Task.Delay(2000);
             }
 

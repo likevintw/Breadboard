@@ -16,7 +16,7 @@ namespace MyAbpApp.NatsRepositories
     public class NatsRepository : IQueueRepository
     {
         private readonly NatsClient _Client;
-        private Channel<double> _percentageWorkerChannel;
+        private Channel<double> _percentageWorkerChannel = Channel.CreateUnbounded<double>();
 
         public NatsRepository()
         {
@@ -33,7 +33,7 @@ namespace MyAbpApp.NatsRepositories
                     Password = password,
                 }
             });
-            _percentageWorkerChannel = Channel.CreateUnbounded<double>();
+
         }
         ~NatsRepository()
         {
@@ -41,11 +41,17 @@ namespace MyAbpApp.NatsRepositories
         public async Task CreatePercentageWorker(string serviceName, string functionName, string serviceVersion, string serviceDescription)
         {
             var svc = _Client.CreateServicesContext();
+
+            Console.WriteLine("PPPPPPPPPP1111");
             var service = await svc.AddServiceAsync(new NatsSvcConfig(serviceName, serviceVersion)
             {
                 Description = serviceDescription
             });
+
+            Console.WriteLine("PPPPPPPPPP22222");
             var root = await service.AddGroupAsync(serviceName, serviceVersion);
+
+            Console.WriteLine("PPPPPPPPPP33333");
             await root.AddEndpointAsync(ReturnPercentage, functionName, serializer: NatsJsonSerializer<double>.Default);
             Console.WriteLine($"add {serviceName} service, version {serviceVersion}");
 
@@ -57,17 +63,29 @@ namespace MyAbpApp.NatsRepositories
                 // todo, if not 1>=msg.Data>=-1, return fail
                 await _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
                 await msg.ReplyAsync($"{msg.Data * 100}");
-                _percentageWorkerChannel.Writer.Complete(); // 完成寫入
+                // _percentageWorkerChannel.Writer.Complete(); // 關閉channel
             }
         }
-        public async Task<double> GetPercentageWorkerValue()
+        // public async Task<double> GetPercentageWorkerValue()
+        // {
+        //     double value = 0;
+        //     while (true)
+        //     {
+        //         // 從 channel 讀取資料
+        //         value = await _percentageWorkerChannel.Reader.ReadAsync();
+        //         Console.WriteLine($"Value {value} read from channel.");
+        //         return value;
+        //     }
+        // }
+        public async Task GetPercentageWorkerValue()
         {
-            await foreach (var item in _percentageWorkerChannel.Reader.ReadAllAsync())
+            double value = 0;
+            while (true)
             {
-                Console.WriteLine($"\t消費者讀取: {item}");
-                break;
+                // 從 channel 讀取資料
+                value = await _percentageWorkerChannel.Reader.ReadAsync();
+                Console.WriteLine($"Value {value} read from channel.");
             }
-            return 0.0;
         }
     }
 }
