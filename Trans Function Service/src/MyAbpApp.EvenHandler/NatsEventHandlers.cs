@@ -51,12 +51,12 @@ namespace MyAbpApp.NatsEventHandlers
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                // double value = 0.0;
+                double value = 0.0;
                 while (true)  // Infinite loop
                 {
-                    // value = _queueRepository.GetPercentageWorkerValue();
-                    // Console.WriteLine($"SubPercentageChannel got {value}");
-                    await _queueRepository.GetPercentageWorkerValue(cancellationToken);
+                    value = await _queueRepository.GetPercentageWorkerValue(cancellationToken);
+                    Console.WriteLine($"SubPercentageChannel got {value}");
+                    // await _queueRepository.GetPercentageWorkerValue(cancellationToken);
                     await Task.Delay(2000);
                 }
             }

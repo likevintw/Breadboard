@@ -128,6 +128,7 @@ public class MyAbpAppWebModule : AbpModule
         context.Services.AddSingleton<IIotRepository, IoTDbRepository>();
         context.Services.AddSingleton<IQueueRepository, NatsRepository>();
         context.Services.AddHostedService<NatsEventHandler>();
+
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 

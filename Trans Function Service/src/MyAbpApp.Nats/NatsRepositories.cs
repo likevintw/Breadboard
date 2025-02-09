@@ -55,12 +55,12 @@ namespace MyAbpApp.NatsRepositories
 
             var root = await service.AddGroupAsync(serviceName, serviceVersion);
 
-            Console.WriteLine("PPPPPPPPPP33333");
-
             await root.AddEndpointAsync(ReturnPercentage, functionName, serializer: NatsJsonSerializer<double>.Default);
 
             Console.WriteLine($"add {serviceName} service, version {serviceVersion}");
 
+
+            Console.WriteLine("PPPPPPPPPP33333");
             try
             {
                 // 使用 CancellationToken 在長時間等待時取消
@@ -72,17 +72,10 @@ namespace MyAbpApp.NatsRepositories
                 Console.WriteLine("CreatePercentageWorker was canceled.");
             }
 
+
             async ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
-
-                // 假設需要檢查 msg.Data 是否在 -1 和 1 之間
-                if (msg.Data < -1 || msg.Data > 1)
-                {
-                    // 如果不在範圍內，則返回錯誤
-                    await msg.ReplyAsync("fail");
-                    return;
-                }
 
                 // 將數據寫入 channel
                 await _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
@@ -91,8 +84,32 @@ namespace MyAbpApp.NatsRepositories
                 await msg.ReplyAsync($"{msg.Data * 100}");
             }
         }
-        // public aGetPercentageWorkerValue
-        public async Task GetPercentageWorkerValue(CancellationToken cancellationToken)
+
+        // public async Task GetPercentageWorkerValue(CancellationToken cancellationToken)
+        // {
+        //     double value = 0;
+
+        //     // 這個外層循環會在 CancellationToken 被取消時退出
+        //     while (!cancellationToken.IsCancellationRequested)
+        //     {
+        //         try
+        //         {
+        //             // 讀取 channel 的資料，這是非同步操作
+        //             value = await _percentageWorkerChannel.Reader.ReadAsync(cancellationToken);  // 傳遞 CancellationToken 來響應取消請求
+        //             Console.WriteLine($"Value {value} read from channel.");
+        //         }
+        //         catch (OperationCanceledException)
+        //         {
+        //             // 如果 cancellationToken 被取消，捕捉異常並退出循環
+        //             Console.WriteLine("Reading from channel was canceled.");
+        //             break;
+        //         }
+        //     }
+
+        //     Console.WriteLine("GetPercentageWorkerValue has been canceled and is exiting.");
+
+        // }
+        public async Task<double> GetPercentageWorkerValue(CancellationToken cancellationToken)
         {
             double value = 0;
 
@@ -104,6 +121,7 @@ namespace MyAbpApp.NatsRepositories
                     // 讀取 channel 的資料，這是非同步操作
                     value = await _percentageWorkerChannel.Reader.ReadAsync(cancellationToken);  // 傳遞 CancellationToken 來響應取消請求
                     Console.WriteLine($"Value {value} read from channel.");
+                    return value;
                 }
                 catch (OperationCanceledException)
                 {
@@ -115,6 +133,7 @@ namespace MyAbpApp.NatsRepositories
 
             Console.WriteLine("GetPercentageWorkerValue has been canceled and is exiting.");
 
+            return 0.0;
         }
     }
 }

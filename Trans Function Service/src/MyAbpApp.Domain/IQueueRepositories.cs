@@ -10,7 +10,7 @@ namespace MyAbpApp.IQueueRepositories
     {
         Task CreatePercentageWorker(
             CancellationToken cancellationToken, string serviceName, string functionName, string serviceVersion, string description);
-        Task GetPercentageWorkerValue(CancellationToken cancellationToken);
+        Task<double> GetPercentageWorkerValue(CancellationToken cancellationToken);
         // Task<double> GetPercentageWorkerValue();
     }
 }
