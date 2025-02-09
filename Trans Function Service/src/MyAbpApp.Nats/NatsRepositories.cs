@@ -25,7 +25,7 @@ namespace MyAbpApp.NatsRepositories
         private readonly IRepository<Compensation, Guid> _compensationRepository;  // 使用 IRepository
         private Channel<double> _percentageWorkerChannel = Channel.CreateUnbounded<double>();
 
-        public NatsRepository(MyAbpAppDbContext dbContext, IRepository<Compensation, int> compensationRepository)
+        public NatsRepository(MyAbpAppDbContext dbContext, IRepository<Compensation, Guid> compensationRepository)
         {
             _dbContext = dbContext;
             _compensationRepository = compensationRepository;
@@ -74,21 +74,16 @@ namespace MyAbpApp.NatsRepositories
                 Console.WriteLine("CreatePercentageWorker was canceled.");
             }
 
-            string compensationId = "3a17fd1e-0b42-6d2c-b330-1bbc3d46f470";
+            Guid compensationId = Guid.Parse("3a17fd1e-0b42-6d2c-b330-1bbc3d46f470");
+
 
             async ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
                 // PG Dbcontext
-                var compensation = await _compensationRepository.FindAsync(compensationId);
-                if (compensation != null)
-                {
-                    Console.WriteLine($"Compensation ID: {compensation.Id}, Amount: {compensation.Amount}");
-                }
-                else
-                {
-                    Console.WriteLine("Compensation not found.");
-                }
+                // var compensation = await _compensationRepository.GetAsync(compensationId);
+                // Console.WriteLine($"CompensationDto ID: {compensation.Id}");
+                // Console.WriteLine($"CompensationDto Value: {compensation.CompensationValue}");
 
                 // 將數據寫入 channel
                 await _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
