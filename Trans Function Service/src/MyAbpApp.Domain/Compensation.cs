@@ -11,3 +11,4 @@ namespace MyAbpApp.Compensations
         public double CompensationValue { get; set; }
     }
 }
+

@@ -1,106 +1,73 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Linq.Dynamic.Core;
-// using System.Threading.Tasks;
-// using Volo.Abp.Application.Dtos;
-// using Volo.Abp.Domain.Repositories;
-// using Volo.Abp.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Repositories;
+using MyAbpApp.Compensations;
+using MyAbpApp.CompensationDtos;
+using MyAbpApp.ICompensationServices;
+namespace MyAbpApp.CompensationServices
+{
 
-// namespace MyAbpApp.Compensations
-// {
-//     public class CompensationService : MyAbpAppAppService, IProductAppService
-//     {
-//         private readonly IRepository<Product, Guid> _productRepository;
+    public class CompensationService : ApplicationService, ICompensationService
+    {
+        private readonly IRepository<Compensation, Guid> _compensationRepository;
 
-//         // 構造函數，注入 Product repository
-//         public CompensationService(IRepository<Product, Guid> productRepository)
-//         {
-//             _productRepository = productRepository;
-//         }
+        public CompensationService(IRepository<Compensation, Guid> compensationRepository)
+        {
+            _compensationRepository = compensationRepository;
+        }
 
+        // 創建新的補償資料
+        public async Task<CompensationDto> CreateAsync(CreateCompensationDto input)
+        {
+            var compensation = new Compensation
+            {
+                DeviceType = input.DeviceType,
+                Version = input.Version,
+                CompensationValue = input.CompensationValue
+            };
 
-//         public async Task<ProductDto> GetAsync(Guid id)
-//         {
-//             var product = await _productRepository.GetAsync(id);
-//             return ObjectMapper.Map<Product, ProductDto>(product);
-//         }
+            await _compensationRepository.InsertAsync(compensation);
+            return ObjectMapper.Map<Compensation, CompensationDto>(compensation);
+        }
 
-//         public async Task<ProductDto> CreateAsync(CreateProductDto input)
-//         {
-//             var product = new Product
-//             {
-//                 Name = input.Name,
-//                 Price = input.Price,
-//                 IsFreeCargo = input.IsFreeCargo,
-//                 ReleaseDate = input.ReleaseDate
-//             };
+        // 根據 ID 取得補償資料
+        public async Task<CompensationDto> GetAsync(Guid id)
+        {
+            var compensation = await _compensationRepository.GetAsync(id);
+            return ObjectMapper.Map<Compensation, CompensationDto>(compensation);
+        }
 
-//             await _productRepository.InsertAsync(product, autoSave: true);
+        // 取得所有補償資料
+        public async Task<GetCompensationDto> GetListAsync()
+        {
+            var compensations = await _compensationRepository.GetListAsync();
+            var compensationDtos = ObjectMapper.Map<List<Compensation>, List<CompensationDto>>(compensations);
 
-//             return ObjectMapper.Map<Product, ProductDto>(product);
-//         }
+            return new GetCompensationDto
+            {
+                CompensationList = compensationDtos
+            };
+        }
 
-//         public async Task<ProductDto> UpdateAsync(UpdateProductDto input)
-//         {
-//             var product = await _productRepository.FirstOrDefaultAsync(p => p.Id == input.Id);
+        // 根據 ID 更新補償資料
+        public async Task<CompensationDto> UpdateAsync(Guid id, CreateCompensationDto input)
+        {
+            var compensation = await _compensationRepository.GetAsync(id);
+            compensation.DeviceType = input.DeviceType;
+            compensation.Version = input.Version;
+            compensation.CompensationValue = input.CompensationValue;
 
-//             if (product == null)
-//             {
-//                 throw new EntityNotFoundException(typeof(Product), input.Id);
-//             }
+            await _compensationRepository.UpdateAsync(compensation);
+            return ObjectMapper.Map<Compensation, CompensationDto>(compensation);
+        }
 
-//             product.Name = input.Name;
-//             product.Price = input.Price;
-//             product.IsFreeCargo = input.IsFreeCargo;
-//             product.ReleaseDate = input.ReleaseDate;
-
-//             await _productRepository.UpdateAsync(product);
-
-//             // 將更新後的產品映射成 DTO 並返回
-//             return ObjectMapper.Map<Product, ProductDto>(product);
-//         }
-
-//         public async Task<ProductDto> DeleteAsync(Guid Id)
-//         {
-//             var product = await _productRepository.GetAsync(Id);
-
-//             // if (product == null)
-//             // {
-//             //     throw new EntityNotFoundException($"Product with Id {input.Id} not found.");
-//             // }
-//             await _productRepository.HardDeleteAsync(product);
-//             // await _productRepository.DeleteAsync(product);
-//             return ObjectMapper.Map<Product, ProductDto>(product);
-//         }
-
-//         public async Task RunIotDbDemo()
-//         {
-//             await Task.Delay(1);
-//             Console.WriteLine("RunIotDbDemo");
-
-//         }
-//         public async Task<PagedResultDto<ProductDto>> GetListAsync(PagedAndSortedResultRequestDto input)
-//         {
-
-//             // 創建一個新的 ProductDto 物件
-//             var product = new ProductDto()
-//             {
-//                 Name = "test GetListAsync product"
-//             };
-//             await Task.Delay(1);
-//             // 將 ProductDto 放入列表中，並建立 PagedResultDto
-//             var productList = new List<ProductDto> { product };
-
-//             // 假設資料庫中只有 1 條產品，TotalCount 設為 1
-//             var totalCount = 1;
-//             Console.WriteLine("KEVIN using GetListAsync implement");
-//             // 返回 PagedResultDto，包含產品列表和總數
-//             return new PagedResultDto<ProductDto>
-//             {
-//                 TotalCount = totalCount,
-//                 Items = productList
-//             };
-//         }
-//     }
-// }
+        // 根據 ID 刪除補償資料
+        public async Task DeleteAsync(Guid id)
+        {
+            var compensation = await _compensationRepository.GetAsync(id);
+            await _compensationRepository.DeleteAsync(compensation);
+        }
+    }
+}

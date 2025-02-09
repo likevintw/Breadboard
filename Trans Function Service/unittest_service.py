@@ -92,5 +92,18 @@ class TestProductAPI(unittest.TestCase):
         # response_json = response.json()
         # print("response:", response_json)
 
+    def test_create_compensation(self):
+            base_url = "http://0.0.0.0:2377/api/app/compensation"
+            headers = {'Content-Type': 'application/json'}
+            new_data = {
+                "deviceType": "honeywell_ce493",
+                "version": "v1.5.3",
+                "compensationValue": 54
+                }
+            response = requests.post(base_url, headers=headers, data=json.dumps(new_data))
+            print("Status Code:", response.status_code)
+            print("Response Text:", response.text)
+
+
 if __name__ == '__main__':
     unittest.main()
