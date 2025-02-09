@@ -70,18 +70,18 @@ class TestProductAPI(unittest.TestCase):
 
 
     def test_create_cpq_honeywell_compensation_service(self):
-            base_url = "http://0.0.0.0:2377/cpq/honeywell_ce3245"
-            headers = {'Content-Type': 'application/json'}
-            product_data = {
-                "serviceName": "hotfix20250205",
-                "serviceVersion": "1.0.2",
-                "serviceDescription": "hot fix",
-            }
-            response = requests.post(base_url, headers=headers, data=json.dumps(product_data))
-            print("Status Code:", response.status_code)
-            print("Response Text:", response.text)
-            # response_json = response.json()
-            # print("response:", response_json)
+        base_url = "http://0.0.0.0:2377/cpq/honeywell_ce3245"
+        headers = {'Content-Type': 'application/json'}
+        product_data = {
+            "serviceName": "hotfix20250205",
+            "serviceVersion": "1.0.2",
+            "serviceDescription": "hot fix",
+        }
+        response = requests.post(base_url, headers=headers, data=json.dumps(product_data))
+        print("Status Code:", response.status_code)
+        print("Response Text:", response.text)
+        # response_json = response.json()
+        # print("response:", response_json)
 
     def test_delete_cpq_nats_microservice(self):
         service_id="3a17a47c-4e0f-e230-18a8-233b4115abab"
@@ -93,16 +93,53 @@ class TestProductAPI(unittest.TestCase):
         # print("response:", response_json)
 
     def test_create_compensation(self):
-            base_url = "http://0.0.0.0:2377/api/app/compensation"
-            headers = {'Content-Type': 'application/json'}
-            new_data = {
-                "deviceType": "honeywell_ce493",
-                "version": "v1.5.3",
-                "compensationValue": 54
-                }
-            response = requests.post(base_url, headers=headers, data=json.dumps(new_data))
-            print("Status Code:", response.status_code)
-            print("Response Text:", response.text)
+        base_url = "http://0.0.0.0:2377/api/app/compensation"
+        headers = {'Content-Type': 'application/json'}
+        new_data = {
+            "deviceType": "honeywell_ce493",
+            "version": "v1.5.3",
+            "compensationValue": 54
+            }
+        response = requests.post(base_url, headers=headers, data=json.dumps(new_data))
+        print("Status Code:", response.status_code)
+        print("Response Text:", response.text)
+
+    def create_compensation(self,new_data):
+        base_url = "http://0.0.0.0:2377/api/app/compensation"
+        headers = {'Content-Type': 'application/json'}
+        response = requests.post(base_url, headers=headers, data=json.dumps(new_data))
+        print("Status Code:", response.status_code)
+        print("Response Text:", response.text)
+
+    def test_create_many_compensation(self):
+        NEW_DATA = [
+            {
+            "deviceType": "honeywell_ce493",
+            "version": "v1.2.3",
+            "compensationValue": 1
+            },
+            {
+            "deviceType": "honeywell_ce493",
+            "version": "v3.5.3",
+            "compensationValue": 2
+            },
+            {
+            "deviceType": "honeywell_ce493",
+            "version": "v1.1.3",
+            "compensationValue": 3
+            },
+            {
+            "deviceType": "honeywell_ce493",
+            "version": "v0.5.3",
+            "compensationValue": 4
+            },
+            {
+            "deviceType": "honeywell_ce493",
+            "version": "v1.8.3",
+            "compensationValue": 5
+            },]
+        for data in NEW_DATA:
+            self.create_compensation(data)
 
 
 if __name__ == '__main__':

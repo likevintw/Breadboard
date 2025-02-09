@@ -15,5 +15,6 @@ python3 -m unittest -v unittest_service.TestProductAPI.test_create_cpq_honeywell
 python3 -m unittest -v unittest_service.TestProductAPI.test_delete_cpq_nats_microservice
 
 python3 -m unittest -v unittest_service.TestProductAPI.test_create_compensation
+python3 -m unittest -v unittest_service.TestProductAPI.test_create_many_compensation
 
 python3 -m unittest -v unittest_service

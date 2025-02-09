@@ -2,29 +2,37 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Channels;
 using NATS.Net;
 using NATS.Client.Core;
 using NATS.Client.Services;
 using NATS.Client.JetStream;
 using NATS.Client.JetStream.Models;
 using NATS.Client.Serializers.Json;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 using MyAbpApp.IQueueRepositories;
+using Volo.Abp.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
+using MyAbpApp.Compensations;
+using MyAbpApp.EntityFrameworkCore;
+using MyAbpApp;
 
 namespace MyAbpApp.NatsRepositories
 {
     public class NatsRepository : IQueueRepository
     {
-        private readonly NatsClient _Client;
+        private NatsClient _Client;
+        private readonly MyAbpAppDbContext _dbContext;
+        private readonly IRepository<Compensation, Guid> _compensationRepository;  // 使用 IRepository
         private Channel<double> _percentageWorkerChannel = Channel.CreateUnbounded<double>();
 
-        public NatsRepository()
+        public NatsRepository(MyAbpAppDbContext dbContext, IRepository<Compensation, int> compensationRepository)
         {
+            _dbContext = dbContext;
+            _compensationRepository = compensationRepository;
+
             var url = Environment.GetEnvironmentVariable("NATS_URL") ?? "nats_demo:4222";
             var username = Environment.GetEnvironmentVariable("NATS_USERNAME") ?? "username";
             var password = Environment.GetEnvironmentVariable("NATS_PASSWORD") ?? "password";
-
             _Client = new NatsClient(new NatsOpts
             {
                 Url = url,
@@ -34,7 +42,7 @@ namespace MyAbpApp.NatsRepositories
                     Password = password,
                 }
             });
-
+            _compensationRepository = compensationRepository;
         }
         ~NatsRepository()
         {
@@ -66,10 +74,21 @@ namespace MyAbpApp.NatsRepositories
                 Console.WriteLine("CreatePercentageWorker was canceled.");
             }
 
+            string compensationId = "3a17fd1e-0b42-6d2c-b330-1bbc3d46f470";
 
             async ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
+                // PG Dbcontext
+                var compensation = await _compensationRepository.FindAsync(compensationId);
+                if (compensation != null)
+                {
+                    Console.WriteLine($"Compensation ID: {compensation.Id}, Amount: {compensation.Amount}");
+                }
+                else
+                {
+                    Console.WriteLine("Compensation not found.");
+                }
 
                 // 將數據寫入 channel
                 await _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
@@ -114,6 +133,7 @@ namespace MyAbpApp.NatsRepositories
                 {
                     // 讀取 channel 的資料，這是非同步操作
                     value = await _percentageWorkerChannel.Reader.ReadAsync(cancellationToken);  // 傳遞 CancellationToken 來響應取消請求
+
                     Console.WriteLine($"Value {value} read from channel.");
                     return value;
                 }
