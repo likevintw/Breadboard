@@ -17,34 +17,56 @@ namespace MyAbpApp.NatsEventHandlers
     {
         private readonly IQueueRepository _queueRepository;
         private readonly IIotRepository _iotRepository;
-        Channel<double> _percentageWorkerChannel;
+        private Channel<double> _percentageWorkerChannel;
+        private Task _backgroundTask;
+        private CancellationTokenSource _cts;
+
         public NatsEventHandler(IQueueRepository queueRepository, IIotRepository iotRepository)
         {
             _queueRepository = queueRepository;
             _iotRepository = iotRepository;
             _percentageWorkerChannel = Channel.CreateUnbounded<double>();
-
-        }
-        ~NatsEventHandler()
-        {
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            // 使用 CancellationTokenSource 來管理取消信號
+            _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+            // 啟動背景任務，並在適當的地方處理取消邏輯
+            _backgroundTask = Task.Run(async () =>
             {
-                Console.WriteLine($"Run Background Process");
-                Task.Run(() => _queueRepository.CreatePercentageWorker(
-                    cancellationToken, "Percentager", "ReturnPercentage", "1.0.1", "transfer to percentage"));
-                await _queueRepository.GetPercentageWorkerValue(cancellationToken);
-                Console.WriteLine($"Run Background Process END");
-            }
+                await BackgroundWork(_cts.Token);
+            }, _cts.Token);
+
+            Console.WriteLine("Background work started.");
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            // 停止背景任務的邏輯
-            await Task.Delay(1);
+            // 停止背景任務
+            if (_cts != null)
+            {
+                _cts.Cancel();
+                await _backgroundTask;  // 等待背景任務完成
+            }
+
+            Console.WriteLine("Background work stopped.");
+        }
+
+        private async Task BackgroundWork(CancellationToken cancellationToken)
+        {
+            // 這裡處理實際的背景工作邏輯
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                Console.WriteLine("Run Background Process");
+                await _queueRepository.CreatePercentageWorker(cancellationToken, "Percentager", "ReturnPercentage", "1.0.1", "transfer to percentage");
+                await _queueRepository.GetPercentageWorkerValue(cancellationToken);
+                Console.WriteLine("Run Background Process END");
+
+                // 可選：設定一些延遲，防止過於頻繁地啟動新任務
+                await Task.Delay(1000, cancellationToken);
+            }
         }
 
         public async Task SubPercentageChannel(CancellationToken cancellationToken)
@@ -52,15 +74,13 @@ namespace MyAbpApp.NatsEventHandlers
             while (!cancellationToken.IsCancellationRequested)
             {
                 double value = 0.0;
-                while (true)  // Infinite loop
-                {
-                    value = await _queueRepository.GetPercentageWorkerValue(cancellationToken);
-                    Console.WriteLine($"SubPercentageChannel got {value}");
-                    // await _queueRepository.GetPercentageWorkerValue(cancellationToken);
-                    await Task.Delay(2000);
-                }
+                // 改成有限次數循環而不是無窮循環
+                value = await _queueRepository.GetPercentageWorkerValue(cancellationToken);
+                Console.WriteLine($"SubPercentageChannel got {value}");
+
+                await Task.Delay(2000, cancellationToken);  // 等待2秒
             }
         }
-
     }
+
 }
