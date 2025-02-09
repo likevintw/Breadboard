@@ -14,16 +14,18 @@ using Volo.Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MyAbpApp.Compensations;
 using MyAbpApp.EntityFrameworkCore;
-using MyAbpApp;
 
 namespace MyAbpApp.NatsRepositories
 {
     public class NatsRepository : IQueueRepository
     {
+
+        Guid compensationId = Guid.Parse("3a17fd1e-0b42-6d2c-b330-1bbc3d46f470");
         private NatsClient _Client;
         private readonly MyAbpAppDbContext _dbContext;
         private readonly IRepository<Compensation, Guid> _compensationRepository;  // 使用 IRepository
         private Channel<double> _percentageWorkerChannel = Channel.CreateUnbounded<double>();
+        private Compensation compensation = null;
 
         public NatsRepository(MyAbpAppDbContext dbContext, IRepository<Compensation, Guid> compensationRepository)
         {
@@ -42,7 +44,6 @@ namespace MyAbpApp.NatsRepositories
                     Password = password,
                 }
             });
-            _compensationRepository = compensationRepository;
         }
         ~NatsRepository()
         {
@@ -74,16 +75,15 @@ namespace MyAbpApp.NatsRepositories
                 Console.WriteLine("CreatePercentageWorker was canceled.");
             }
 
-            Guid compensationId = Guid.Parse("3a17fd1e-0b42-6d2c-b330-1bbc3d46f470");
 
 
             async ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
                 // PG Dbcontext
-                // var compensation = await _compensationRepository.GetAsync(compensationId);
-                // Console.WriteLine($"CompensationDto ID: {compensation.Id}");
-                // Console.WriteLine($"CompensationDto Value: {compensation.CompensationValue}");
+                var compensation = await _compensationRepository.GetAsync(compensationId);
+                Console.WriteLine($"CompensationDto ID: {compensation.Id}");
+                Console.WriteLine($"CompensationDto Value: {compensation.CompensationValue}");
 
                 // 將數據寫入 channel
                 await _percentageWorkerChannel.Writer.WriteAsync(msg.Data);

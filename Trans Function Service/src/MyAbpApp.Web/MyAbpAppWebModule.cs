@@ -132,6 +132,7 @@ public class MyAbpAppWebModule : AbpModule
         context.Services.AddSingleton<ICompensationService, CompensationService>();
         context.Services.AddHostedService<NatsEventHandler>();
 
+
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 
