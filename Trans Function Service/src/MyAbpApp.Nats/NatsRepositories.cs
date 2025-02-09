@@ -95,15 +95,25 @@ namespace MyAbpApp.NatsRepositories
         public async Task GetPercentageWorkerValue(CancellationToken cancellationToken)
         {
             double value = 0;
+
+            // 這個外層循環會在 CancellationToken 被取消時退出
             while (!cancellationToken.IsCancellationRequested)
             {
-                while (true)
+                try
                 {
-                    // 從 channel 讀取資料
-                    value = await _percentageWorkerChannel.Reader.ReadAsync();
+                    // 讀取 channel 的資料，這是非同步操作
+                    value = await _percentageWorkerChannel.Reader.ReadAsync(cancellationToken);  // 傳遞 CancellationToken 來響應取消請求
                     Console.WriteLine($"Value {value} read from channel.");
                 }
+                catch (OperationCanceledException)
+                {
+                    // 如果 cancellationToken 被取消，捕捉異常並退出循環
+                    Console.WriteLine("Reading from channel was canceled.");
+                    break;
+                }
             }
+
+            Console.WriteLine("GetPercentageWorkerValue has been canceled and is exiting.");
 
         }
     }
