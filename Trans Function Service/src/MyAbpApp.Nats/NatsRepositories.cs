@@ -44,23 +44,17 @@ namespace MyAbpApp.NatsRepositories
         {
             var svc = _Client.CreateServicesContext();
 
-            Console.WriteLine("PPPPPPPPPP1111");
-
             var service = await svc.AddServiceAsync(new NatsSvcConfig(serviceName, serviceVersion)
             {
                 Description = serviceDescription
             });
 
-            Console.WriteLine("PPPPPPPPPP22222");
 
             var root = await service.AddGroupAsync(serviceName, serviceVersion);
-
             await root.AddEndpointAsync(ReturnPercentage, functionName, serializer: NatsJsonSerializer<double>.Default);
-
             Console.WriteLine($"add {serviceName} service, version {serviceVersion}");
 
 
-            Console.WriteLine("PPPPPPPPPP33333");
             try
             {
                 // 使用 CancellationToken 在長時間等待時取消
