@@ -8,6 +8,8 @@ namespace MyAbpApp.IWorkManagers
 {
     public interface IWorkManager
     {
+        Task CreateContexturalPhysicalQualityWorker(
+            CancellationToken cancellationToken, string serviceVersion, string serviceDescription);
         Task CreateTemperatureUnitTransferWorker(
             CancellationToken cancellationToken, string serviceVersion, string serviceDescription);
         Task CreatePercentageWorker(

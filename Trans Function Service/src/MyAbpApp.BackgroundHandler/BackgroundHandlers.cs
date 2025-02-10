@@ -65,13 +65,13 @@ namespace MyAbpApp.BackgroundHandlers
             while (!cancellationToken.IsCancellationRequested)
             {
 
-                var TemperatureUnitTransferTask = _workManager.CreateTemperatureUnitTransferWorker(cancellationToken, "1.2.1", "Temperature Unit Transfer");
-                var percentageWorkerTask = _workManager.CreatePercentageWorker(cancellationToken, "2.9.3", "Get Percentage Value");
-                var compensationWorkerTask = _workManager.CreateCompensationWorker(cancellationToken, "3.2.6", "Get Compensated Value");
-                var compensationWorkerValueTask = _workManager.GetCompensationWorkerValue(cancellationToken);
+                // var TemperatureUnitTransferTask = _workManager.CreateTemperatureUnitTransferWorker(cancellationToken, "1.2.1", "Temperature Unit Transfer");
+                // var percentageWorkerTask = _workManager.CreatePercentageWorker(cancellationToken, "2.9.3", "Get Percentage Value");
+                // var compensationWorkerTask = _workManager.CreateCompensationWorker(cancellationToken, "3.2.6", "Get Compensated Value");
+                // var compensationWorkerValueTask = _workManager.GetCompensationWorkerValue(cancellationToken);
+                var cpqTask = _workManager.CreateContexturalPhysicalQualityWorker(cancellationToken, "5.7.7", "Contextural Physical Quality Service");
 
-                // await Task.WhenAll(CelsiusToFahrenheitTask, FahrenheitToCelsiusTask, percentageWorkerTask, compensationWorkerTask, compensationWorkerValueTask);
-                await Task.WhenAll(TemperatureUnitTransferTask, percentageWorkerTask, compensationWorkerTask, compensationWorkerValueTask);
+                await Task.WhenAll(cpqTask);
 
                 _ = Task.Run(() => SubPercentageChannel(cancellationToken));
                 await Task.Delay(1000, cancellationToken);
