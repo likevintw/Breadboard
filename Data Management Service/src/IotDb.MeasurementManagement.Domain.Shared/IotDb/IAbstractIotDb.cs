@@ -2,11 +2,11 @@
 
 namespace IotDb.MeasurementManagement.IotDb
 {
-    public interface AbstractIotDb
+    public interface IAbstractIotDb
     {
         public abstract static string Measurement { get; }
         public DateTime Time { get; set; }
         public string Timeseries { get; set; }
-        public float Value { get; set; }
+        public object Value { get; set; }
     }
 }
