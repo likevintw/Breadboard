@@ -167,7 +167,6 @@ namespace MyAbpApp.NatsImplements
                 Description = serviceDescription
             });
 
-
             var root = await service.AddGroupAsync(ServiceName, serviceVersion);
             await root.AddEndpointAsync(ReturnCompensatedValue, FunctionName, serializer: NatsJsonSerializer<double>.Default);
             Console.WriteLine($"add {ServiceName} service, version {serviceVersion}");
