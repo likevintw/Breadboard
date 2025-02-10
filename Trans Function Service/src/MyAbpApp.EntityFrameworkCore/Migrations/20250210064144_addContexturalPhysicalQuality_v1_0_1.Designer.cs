@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyAbpApp.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace MyAbpApp.Migrations
 {
     [DbContext(typeof(MyAbpAppDbContext))]
-    partial class MyAbpAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250210064144_addContexturalPhysicalQuality_v1_0_1")]
+    partial class addContexturalPhysicalQuality_v1_0_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,7 +122,7 @@ namespace MyAbpApp.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<string>("Process")
+                    b.Property<string>("process")
                         .IsRequired()
                         .HasColumnType("text");
 

@@ -1,6 +1,8 @@
 using AutoMapper;
 using MyAbpApp.Compensations;
 using MyAbpApp.CompensationDtos;
+using MyAbpApp.ContexturalPhysicalQualities;
+using MyAbpApp.ContexturalPhysicalQualityDtos;
 using System.Collections.Generic;
 namespace MyAbpApp;
 
@@ -29,5 +31,8 @@ public class MyAbpAppApplicationAutoMapperProfile : Profile
         // List<Compensation> 到 GetCompensationDto 的映射
         CreateMap<List<Compensation>, GetCompensationDto>()
             .ForMember(dest => dest.CompensationList, opt => opt.MapFrom(src => src));
+
+        CreateMap<ContexturalPhysicalQuality, ContexturalPhysicalQualityDto>();
+        CreateMap<CreateOrUpdateContexturalPhysicalQualityDto, ContexturalPhysicalQuality>();
     }
 }

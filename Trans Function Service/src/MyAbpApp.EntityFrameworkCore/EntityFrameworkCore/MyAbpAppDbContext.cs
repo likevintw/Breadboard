@@ -16,6 +16,7 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using MyAbpApp.Products;
 using MyAbpApp.Compensations;
+using MyAbpApp.ContexturalPhysicalQualities;
 
 namespace MyAbpApp.EntityFrameworkCore;
 
@@ -60,6 +61,7 @@ public class MyAbpAppDbContext :
     #endregion
     public DbSet<Product> Products { get; set; }
     public DbSet<Compensation> Compensations { get; set; }
+    public DbSet<ContexturalPhysicalQuality> ContexturalPhysicalQualities { get; set; }
     public MyAbpAppDbContext(DbContextOptions<MyAbpAppDbContext> options)
         : base(options)
     {
@@ -97,6 +99,12 @@ public class MyAbpAppDbContext :
             b.Property(x => x.Name) // 對ProductId欄位設定
                 .HasMaxLength(ProductConstant.MaxNameLength)
                 .IsRequired();
+        });
+
+        builder.Entity<ContexturalPhysicalQuality>(b =>
+        {
+            b.ToTable("ContexturalPhysicalQualities");
+            b.ConfigureByConvention();
         });
 
     }

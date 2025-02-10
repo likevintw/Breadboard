@@ -12,7 +12,6 @@ using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Entities;
 using MyAbpApp.IQueueRepositories;
 using MyAbpApp.IIotRepositories;
-using MyAbpApp.Products;
 
 namespace MyAbpApp.NatsEventHandlers
 {
@@ -20,20 +19,17 @@ namespace MyAbpApp.NatsEventHandlers
     {
         private IQueueRepository? _queueRepository;
         private IIotRepository? _iotRepository;
-        IRepository<Product, Guid> _productRepository;
         private Channel<double> _percentageWorkerChannel;
         private Task? _backgroundTask;
         private CancellationTokenSource? _cts;
 
         public NatsEventHandler(
             IQueueRepository queueRepository,
-            IIotRepository iotRepository,
-            IRepository<Product, Guid> productRepository)
+            IIotRepository iotRepository)
         {
             _queueRepository = queueRepository;
             _iotRepository = iotRepository;
             _percentageWorkerChannel = Channel.CreateUnbounded<double>();
-            _productRepository = productRepository;
         }
         ~NatsEventHandler()
         { }
