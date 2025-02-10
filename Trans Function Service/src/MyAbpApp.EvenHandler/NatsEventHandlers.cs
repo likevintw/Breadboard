@@ -70,7 +70,9 @@ namespace MyAbpApp.NatsEventHandlers
             while (!cancellationToken.IsCancellationRequested)
             {
                 Console.WriteLine("Run Background Process");
-                await _queueRepository.CreateCompensationWorker(cancellationToken, "Percentager", "ReturnPercentage", "1.0.1", "transfer to percentage");
+                await _queueRepository.CreateTemperatureUnitTransferWorker(cancellationToken, "1.0.1", "transfer temperature unit");
+                await _queueRepository.CreatePercentageWorker(cancellationToken, "2.9.3", "Get Percentage Value");
+                await _queueRepository.CreateCompensationWorker(cancellationToken, "3.2.6", "Get Compensated Value");
                 await _queueRepository.GetCompensationWorkerValue(cancellationToken);
                 _ = Task.Run(() => SubPercentageChannel(cancellationToken));
                 Console.WriteLine("Run Background Process END");

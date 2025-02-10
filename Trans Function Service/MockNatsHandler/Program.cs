@@ -27,8 +27,8 @@ class Program
         });
         var svc = nc.CreateServicesContext();
 
-        string serviceName = "Percentager";
-        string functionName = "ReturnPercentage";
+        string serviceName = "Compensator";
+        string functionName = "ReturnCompensatedValue";
 
         var result = await nc.RequestAsync<double, double>(subject: $"{serviceName}.{functionName}", data: 0);
 

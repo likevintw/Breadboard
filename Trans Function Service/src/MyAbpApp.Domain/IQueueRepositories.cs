@@ -8,9 +8,12 @@ namespace MyAbpApp.IQueueRepositories
 {
     public interface IQueueRepository
     {
+        Task CreateTemperatureUnitTransferWorker(
+            CancellationToken cancellationToken, string serviceVersion, string serviceDescription);
+        Task CreatePercentageWorker(
+        CancellationToken cancellationToken, string serviceVersion, string serviceDescription);
         Task CreateCompensationWorker(
-            CancellationToken cancellationToken, string serviceName, string functionName, string serviceVersion, string description);
+        CancellationToken cancellationToken, string serviceVersion, string serviceDescription);
         Task<double> GetCompensationWorkerValue(CancellationToken cancellationToken);
-        // Task<double> GetPercentageWorkerValue();
     }
 }

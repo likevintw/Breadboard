@@ -48,21 +48,87 @@ namespace MyAbpApp.NatsRepositories
         ~NatsRepository()
         {
         }
-        public async Task CreateCompensationWorker(
-            CancellationToken cancellationToken, string serviceName, string functionName, string serviceVersion, string serviceDescription)
+        public async Task CreateTemperatureUnitTransferWorker(
+            CancellationToken cancellationToken, string serviceVersion, string serviceDescription)
         {
+            string ServiceName = "TemeratureUnitTransfer";
+            string FahrenheitToCelsius = "FahrenheitToCelsius";
+            string CelsiusToFahrenheit = "CelsiusToFahrenheit";
+
+            var svc = _Client.CreateServicesContext();
+            var service = await svc.AddServiceAsync(new NatsSvcConfig(ServiceName, serviceVersion)
+            {
+                Description = serviceDescription
+            });
+            var root = await service.AddGroupAsync(ServiceName, serviceVersion);
+            await root.AddEndpointAsync(TurnFahrenheitToCelsius, FahrenheitToCelsius, serializer: NatsJsonSerializer<double>.Default);
+            await root.AddEndpointAsync(TurnCelsiusToFahrenheit, CelsiusToFahrenheit, serializer: NatsJsonSerializer<double>.Default);
+            Console.WriteLine($"add {ServiceName} service, version {serviceVersion}");
+            try
+            {
+                await Task.Delay(int.MaxValue, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("CreatePercentageWorker was canceled.");
+            }
+            async ValueTask TurnFahrenheitToCelsius(NatsSvcMsg<double> msg)
+            {
+                Console.WriteLine($"show on worker {msg.Data}");
+                double CelsiusDegree = (msg.Data - 32) * 5 / 9;
+                await _percentageWorkerChannel.Writer.WriteAsync(CelsiusDegree);
+            }
+            async ValueTask TurnCelsiusToFahrenheit(NatsSvcMsg<double> msg)
+            {
+                Console.WriteLine($"show on worker {msg.Data}");
+                double FahrenheitDegree = msg.Data * 9 / 5 + 32;
+                await msg.ReplyAsync($"{FahrenheitDegree}");
+            }
+        }
+        public async Task CreatePercentageWorker(
+            CancellationToken cancellationToken, string serviceVersion, string serviceDescription)
+        {
+            string ServiceName = "PercentageHandler";
+            string FunctionName = "ReturnPercentage";
+            var svc = _Client.CreateServicesContext();
+            var service = await svc.AddServiceAsync(new NatsSvcConfig(ServiceName, serviceVersion)
+            {
+                Description = serviceDescription
+            });
+            var root = await service.AddGroupAsync(ServiceName, serviceVersion);
+            await root.AddEndpointAsync(ReturnPercentage, FunctionName, serializer: NatsJsonSerializer<double>.Default);
+            Console.WriteLine($"add {ServiceName} service, version {serviceVersion}");
+            try
+            {
+                await Task.Delay(int.MaxValue, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("CreatePercentageWorker was canceled.");
+            }
+            async ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
+            {
+                Console.WriteLine($"show on worker {msg.Data}");
+                await _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
+                await msg.ReplyAsync($"{msg.Data * 100}");
+            }
+        }
+        public async Task CreateCompensationWorker(
+            CancellationToken cancellationToken, string serviceVersion, string serviceDescription)
+        {
+            string ServiceName = "Compensator";
+            string FunctionName = "ReturnCompensatedValue";
             var svc = _Client.CreateServicesContext();
 
-            var service = await svc.AddServiceAsync(new NatsSvcConfig(serviceName, serviceVersion)
+            var service = await svc.AddServiceAsync(new NatsSvcConfig(ServiceName, serviceVersion)
             {
                 Description = serviceDescription
             });
 
 
-            var root = await service.AddGroupAsync(serviceName, serviceVersion);
-            await root.AddEndpointAsync(ReturnCompensatedValue, functionName, serializer: NatsJsonSerializer<double>.Default);
-            Console.WriteLine($"add {serviceName} service, version {serviceVersion}");
-
+            var root = await service.AddGroupAsync(ServiceName, serviceVersion);
+            await root.AddEndpointAsync(ReturnCompensatedValue, FunctionName, serializer: NatsJsonSerializer<double>.Default);
+            Console.WriteLine($"add {ServiceName} service, version {serviceVersion}");
 
             try
             {
@@ -74,8 +140,6 @@ namespace MyAbpApp.NatsRepositories
                 // 當取消請求時，捕捉 OperationCanceledException 並處理取消邏輯
                 Console.WriteLine("CreatePercentageWorker was canceled.");
             }
-
-
 
             async ValueTask ReturnCompensatedValue(NatsSvcMsg<double> msg)
             {
@@ -91,8 +155,8 @@ namespace MyAbpApp.NatsRepositories
                 // 進行回覆
                 await msg.ReplyAsync($"{msg.Data * 100}");
             }
-        }
 
+        }
         // public async Task GetPercentageWorkerValue(CancellationToken cancellationToken)
         // {
         //     double value = 0;
@@ -143,5 +207,6 @@ namespace MyAbpApp.NatsRepositories
 
             return 0.0;
         }
+
     }
 }
