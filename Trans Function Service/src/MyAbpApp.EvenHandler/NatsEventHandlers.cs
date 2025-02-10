@@ -69,15 +69,16 @@ namespace MyAbpApp.NatsEventHandlers
             // 這裡處理實際的背景工作邏輯
             while (!cancellationToken.IsCancellationRequested)
             {
-                Console.WriteLine("Run Background Process");
-                await _queueRepository.CreateTemperatureUnitTransferWorker(cancellationToken, "1.0.1", "transfer temperature unit");
-                await _queueRepository.CreatePercentageWorker(cancellationToken, "2.9.3", "Get Percentage Value");
-                await _queueRepository.CreateCompensationWorker(cancellationToken, "3.2.6", "Get Compensated Value");
-                await _queueRepository.GetCompensationWorkerValue(cancellationToken);
-                _ = Task.Run(() => SubPercentageChannel(cancellationToken));
-                Console.WriteLine("Run Background Process END");
+                // var CelsiusToFahrenheitTask = _queueRepository.CreateTemperatureCelsiusToFahrenheitWorker(cancellationToken, "1.4.1", "Celsius To Fahrenheit");
+                var FahrenheitToCelsiusTask = _queueRepository.CreateTemperatureUnitTransferWorker(cancellationToken, "1.2.1", "Temperature Unit Transfer");
+                var percentageWorkerTask = _queueRepository.CreatePercentageWorker(cancellationToken, "2.9.3", "Get Percentage Value");
+                var compensationWorkerTask = _queueRepository.CreateCompensationWorker(cancellationToken, "3.2.6", "Get Compensated Value");
+                var compensationWorkerValueTask = _queueRepository.GetCompensationWorkerValue(cancellationToken);
 
-                // 可選：設定一些延遲，防止過於頻繁地啟動新任務
+                // await Task.WhenAll(CelsiusToFahrenheitTask, FahrenheitToCelsiusTask, percentageWorkerTask, compensationWorkerTask, compensationWorkerValueTask);
+                await Task.WhenAll(FahrenheitToCelsiusTask, percentageWorkerTask, compensationWorkerTask, compensationWorkerValueTask);
+
+                _ = Task.Run(() => SubPercentageChannel(cancellationToken));
                 await Task.Delay(1000, cancellationToken);
             }
         }

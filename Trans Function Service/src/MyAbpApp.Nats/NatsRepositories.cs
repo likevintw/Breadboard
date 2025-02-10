@@ -70,21 +70,22 @@ namespace MyAbpApp.NatsRepositories
             }
             catch (OperationCanceledException)
             {
-                Console.WriteLine("CreatePercentageWorker was canceled.");
+                Console.WriteLine("CreateTemperatureFahrenheitToCelsiusWorker was canceled.");
             }
             async ValueTask TurnFahrenheitToCelsius(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
-                double CelsiusDegree = (msg.Data - 32) * 5 / 9;
-                await _percentageWorkerChannel.Writer.WriteAsync(CelsiusDegree);
+                double CelsiusDegree = Math.Round((msg.Data - 32) * 5 / 9, 2);
+                await msg.ReplyAsync($"{CelsiusDegree}");
             }
             async ValueTask TurnCelsiusToFahrenheit(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
-                double FahrenheitDegree = msg.Data * 9 / 5 + 32;
+                double FahrenheitDegree = Math.Round(msg.Data * 9 / 5 + 32, 2);
                 await msg.ReplyAsync($"{FahrenheitDegree}");
             }
         }
+
         public async Task CreatePercentageWorker(
             CancellationToken cancellationToken, string serviceVersion, string serviceDescription)
         {
@@ -138,7 +139,7 @@ namespace MyAbpApp.NatsRepositories
             catch (OperationCanceledException)
             {
                 // 當取消請求時，捕捉 OperationCanceledException 並處理取消邏輯
-                Console.WriteLine("CreatePercentageWorker was canceled.");
+                Console.WriteLine("CreateCompensationWorker was canceled.");
             }
 
             async ValueTask ReturnCompensatedValue(NatsSvcMsg<double> msg)
@@ -150,10 +151,10 @@ namespace MyAbpApp.NatsRepositories
                 Console.WriteLine($"CompensationDto Value: {compensation.CompensationValue}");
 
                 // 將數據寫入 channel
-                await _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
+                await _percentageWorkerChannel.Writer.WriteAsync(msg.Data + compensation.CompensationValue);
 
                 // 進行回覆
-                await msg.ReplyAsync($"{msg.Data * 100}");
+                await msg.ReplyAsync($"{msg.Data + compensation.CompensationValue}");
             }
 
         }
