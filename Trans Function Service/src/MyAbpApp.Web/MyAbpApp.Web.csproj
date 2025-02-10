@@ -60,7 +60,7 @@
     <ProjectReference Include="..\MyAbpApp.NatsEntityFrameworkCore\MyAbpApp.NatsEntityFrameworkCore.csproj" />
     <ProjectReference Include="..\MyAbpApp.IotDb\MyAbpApp.IotDb.csproj" />
     <ProjectReference Include="..\MyAbpApp.Nats\MyAbpApp.Nats.csproj" />
-    <ProjectReference Include="..\MyAbpApp.EvenHandler\MyAbpApp.EvenHandler.csproj" />
+    <ProjectReference Include="..\MyAbpApp.BackgroundHandler\MyAbpApp.BackgroundHandler.csproj" />
   </ItemGroup>
 
   <ItemGroup>

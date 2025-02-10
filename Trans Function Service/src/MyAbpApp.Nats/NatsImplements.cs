@@ -48,6 +48,47 @@ namespace MyAbpApp.NatsImplements
         ~NatsImplement()
         {
         }
+
+        public async Task CreateContexturalPhysicalQualityWorker(
+            CancellationToken cancellationToken, string serviceVersion, string serviceDescription)
+        {
+            string ServiceName = "ContexturalPhysicalQualityService";
+            string FunctionName = "ReturnContexturalPhysicalQualityValue";
+            var svc = _Client.CreateServicesContext();
+
+            var service = await svc.AddServiceAsync(new NatsSvcConfig(ServiceName, serviceVersion)
+            {
+                Description = serviceDescription
+            });
+
+
+            var root = await service.AddGroupAsync(ServiceName, serviceVersion);
+            await root.AddEndpointAsync(ReturnCpqValue, FunctionName, serializer: NatsJsonSerializer<string>.Default);
+            Console.WriteLine($"add {ServiceName} service, version {serviceVersion}");
+
+            try
+            {
+                // 使用 CancellationToken 在長時間等待時取消
+                await Task.Delay(int.MaxValue, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                // 當取消請求時，捕捉 OperationCanceledException 並處理取消邏輯
+                Console.WriteLine("CreateCompensationWorker was canceled.");
+            }
+
+            async ValueTask ReturnCpqValue(NatsSvcMsg<string> msg)
+            {
+                Console.WriteLine($"show on worker {msg.Data}");
+                // PG Dbcontext
+                var compensation = await _compensationRepository.GetAsync(compensationId);
+                Console.WriteLine($"CompensationDto ID: {compensation.Id}");
+                Console.WriteLine($"CompensationDto Value: {compensation.CompensationValue}");
+
+                // 進行回覆
+                await msg.ReplyAsync($"{msg.Data + compensation.CompensationValue}");
+            }
+        }
         public async Task CreateTemperatureUnitTransferWorker(
             CancellationToken cancellationToken, string serviceVersion, string serviceDescription)
         {

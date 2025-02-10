@@ -60,7 +60,7 @@ using MyAbpApp.IIotRepositories;
 using MyAbpApp.IoTDbRepositories;
 using MyAbpApp.IWorkManagers;
 using MyAbpApp.NatsImplements;
-using MyAbpApp.NatsEventHandlers;
+using MyAbpApp.BackgroundHandlers;
 using MyAbpApp.ICompensationServices;
 using MyAbpApp.CompensationServices;
 namespace MyAbpApp.Web;
@@ -130,7 +130,7 @@ public class MyAbpAppWebModule : AbpModule
         context.Services.AddSingleton<IIotRepository, IoTDbRepository>();
         context.Services.AddSingleton<IWorkManager, NatsImplement>();
         context.Services.AddSingleton<ICompensationService, CompensationService>();
-        context.Services.AddHostedService<NatsEventHandler>();
+        context.Services.AddHostedService<BackgroundHandler>();
 
 
         var hostingEnvironment = context.Services.GetHostingEnvironment();

@@ -13,9 +13,9 @@ using Volo.Abp.Domain.Entities;
 using MyAbpApp.IWorkManagers;
 using MyAbpApp.IIotRepositories;
 
-namespace MyAbpApp.NatsEventHandlers
+namespace MyAbpApp.BackgroundHandlers
 {
-    public class NatsEventHandler : IHostedService
+    public class BackgroundHandler : IHostedService
     {
         private IWorkManager? _workManager;
         private IIotRepository? _iotRepository;
@@ -23,7 +23,7 @@ namespace MyAbpApp.NatsEventHandlers
         private Task? _backgroundTask;
         private CancellationTokenSource? _cts;
 
-        public NatsEventHandler(
+        public BackgroundHandler(
             IWorkManager queueRepository,
             IIotRepository iotRepository)
         {
@@ -31,7 +31,7 @@ namespace MyAbpApp.NatsEventHandlers
             _iotRepository = iotRepository;
             _percentageWorkerChannel = Channel.CreateUnbounded<double>();
         }
-        ~NatsEventHandler()
+        ~BackgroundHandler()
         { }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -64,14 +64,14 @@ namespace MyAbpApp.NatsEventHandlers
             // 這裡處理實際的背景工作邏輯
             while (!cancellationToken.IsCancellationRequested)
             {
-                // var CelsiusToFahrenheitTask = _workManager.CreateTemperatureCelsiusToFahrenheitWorker(cancellationToken, "1.4.1", "Celsius To Fahrenheit");
-                var FahrenheitToCelsiusTask = _workManager.CreateTemperatureUnitTransferWorker(cancellationToken, "1.2.1", "Temperature Unit Transfer");
+
+                var TemperatureUnitTransferTask = _workManager.CreateTemperatureUnitTransferWorker(cancellationToken, "1.2.1", "Temperature Unit Transfer");
                 var percentageWorkerTask = _workManager.CreatePercentageWorker(cancellationToken, "2.9.3", "Get Percentage Value");
                 var compensationWorkerTask = _workManager.CreateCompensationWorker(cancellationToken, "3.2.6", "Get Compensated Value");
                 var compensationWorkerValueTask = _workManager.GetCompensationWorkerValue(cancellationToken);
 
                 // await Task.WhenAll(CelsiusToFahrenheitTask, FahrenheitToCelsiusTask, percentageWorkerTask, compensationWorkerTask, compensationWorkerValueTask);
-                await Task.WhenAll(FahrenheitToCelsiusTask, percentageWorkerTask, compensationWorkerTask, compensationWorkerValueTask);
+                await Task.WhenAll(TemperatureUnitTransferTask, percentageWorkerTask, compensationWorkerTask, compensationWorkerValueTask);
 
                 _ = Task.Run(() => SubPercentageChannel(cancellationToken));
                 await Task.Delay(1000, cancellationToken);
