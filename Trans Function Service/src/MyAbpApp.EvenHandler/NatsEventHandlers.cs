@@ -10,24 +10,24 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Entities;
-using MyAbpApp.IQueueRepositories;
+using MyAbpApp.IWorkManagers;
 using MyAbpApp.IIotRepositories;
 
 namespace MyAbpApp.NatsEventHandlers
 {
     public class NatsEventHandler : IHostedService
     {
-        private IQueueRepository? _queueRepository;
+        private IWorkManager? _workManager;
         private IIotRepository? _iotRepository;
         private Channel<double> _percentageWorkerChannel;
         private Task? _backgroundTask;
         private CancellationTokenSource? _cts;
 
         public NatsEventHandler(
-            IQueueRepository queueRepository,
+            IWorkManager queueRepository,
             IIotRepository iotRepository)
         {
-            _queueRepository = queueRepository;
+            _workManager = queueRepository;
             _iotRepository = iotRepository;
             _percentageWorkerChannel = Channel.CreateUnbounded<double>();
         }
@@ -64,11 +64,11 @@ namespace MyAbpApp.NatsEventHandlers
             // 這裡處理實際的背景工作邏輯
             while (!cancellationToken.IsCancellationRequested)
             {
-                // var CelsiusToFahrenheitTask = _queueRepository.CreateTemperatureCelsiusToFahrenheitWorker(cancellationToken, "1.4.1", "Celsius To Fahrenheit");
-                var FahrenheitToCelsiusTask = _queueRepository.CreateTemperatureUnitTransferWorker(cancellationToken, "1.2.1", "Temperature Unit Transfer");
-                var percentageWorkerTask = _queueRepository.CreatePercentageWorker(cancellationToken, "2.9.3", "Get Percentage Value");
-                var compensationWorkerTask = _queueRepository.CreateCompensationWorker(cancellationToken, "3.2.6", "Get Compensated Value");
-                var compensationWorkerValueTask = _queueRepository.GetCompensationWorkerValue(cancellationToken);
+                // var CelsiusToFahrenheitTask = _workManager.CreateTemperatureCelsiusToFahrenheitWorker(cancellationToken, "1.4.1", "Celsius To Fahrenheit");
+                var FahrenheitToCelsiusTask = _workManager.CreateTemperatureUnitTransferWorker(cancellationToken, "1.2.1", "Temperature Unit Transfer");
+                var percentageWorkerTask = _workManager.CreatePercentageWorker(cancellationToken, "2.9.3", "Get Percentage Value");
+                var compensationWorkerTask = _workManager.CreateCompensationWorker(cancellationToken, "3.2.6", "Get Compensated Value");
+                var compensationWorkerValueTask = _workManager.GetCompensationWorkerValue(cancellationToken);
 
                 // await Task.WhenAll(CelsiusToFahrenheitTask, FahrenheitToCelsiusTask, percentageWorkerTask, compensationWorkerTask, compensationWorkerValueTask);
                 await Task.WhenAll(FahrenheitToCelsiusTask, percentageWorkerTask, compensationWorkerTask, compensationWorkerValueTask);
@@ -84,7 +84,7 @@ namespace MyAbpApp.NatsEventHandlers
             {
                 double value = 0.0;
                 // 改成有限次數循環而不是無窮循環
-                value = await _queueRepository?.GetCompensationWorkerValue(cancellationToken);
+                value = await _workManager?.GetCompensationWorkerValue(cancellationToken);
                 Console.WriteLine($"SubPercentageChannel got {value}");
 
                 await Task.Delay(2000, cancellationToken);  // 等待2秒

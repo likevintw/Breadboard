@@ -9,15 +9,15 @@ using NATS.Client.Services;
 using NATS.Client.JetStream;
 using NATS.Client.JetStream.Models;
 using NATS.Client.Serializers.Json;
-using MyAbpApp.IQueueRepositories;
+using MyAbpApp.IWorkManagers;
 using Volo.Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MyAbpApp.Compensations;
 using MyAbpApp.EntityFrameworkCore;
 
-namespace MyAbpApp.NatsRepositories
+namespace MyAbpApp.NatsImplements
 {
-    public class NatsRepository : IQueueRepository
+    public class NatsImplement : IWorkManager
     {
 
         Guid compensationId = Guid.Parse("3a17ffc5-70ce-b0b3-6e8d-14b99adabe92");
@@ -27,7 +27,7 @@ namespace MyAbpApp.NatsRepositories
         private Channel<double> _percentageWorkerChannel = Channel.CreateUnbounded<double>();
         private Compensation compensation = null;
 
-        public NatsRepository(MyAbpAppDbContext dbContext, IRepository<Compensation, Guid> compensationRepository)
+        public NatsImplement(MyAbpAppDbContext dbContext, IRepository<Compensation, Guid> compensationRepository)
         {
             _dbContext = dbContext;
             _compensationRepository = compensationRepository;
@@ -45,7 +45,7 @@ namespace MyAbpApp.NatsRepositories
                 }
             });
         }
-        ~NatsRepository()
+        ~NatsImplement()
         {
         }
         public async Task CreateTemperatureUnitTransferWorker(
