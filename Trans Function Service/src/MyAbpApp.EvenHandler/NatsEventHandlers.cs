@@ -51,7 +51,6 @@ namespace MyAbpApp.NatsEventHandlers
 
             Console.WriteLine("Background work started.");
         }
-
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             // 停止背景任務
