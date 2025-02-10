@@ -22,7 +22,7 @@ namespace IotDb.MeasurementManagement.Cpu
                 throw new ArgumentOutOfRangeException("StartDateTime date time", "StartDateTime is after EndDateTime.");
             }
 
-            var list = await repository.GetPageByTime(request.StartDateTime, request.EndDateTime, request.Page.SkipCount, request.Page.MaxResultCount);
+            var list = await repository.GetPageByTime(request.Device, request.StartDateTime, request.EndDateTime, request.Page.SkipCount, request.Page.MaxResultCount);
             var dto = ObjectMapper.Map<List<CpuLoad>, List<CpuLoadDto>>(list);
             return new PagedResultDto<CpuLoadDto>(dto.Count, dto);
         }

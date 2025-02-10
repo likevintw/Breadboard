@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace IotDb.MeasurementManagement.Cpu
 {
-    public class IotDbRepository<T> : IIotDbRepository<T> where T : AbstractIotDb, new()
+    public class IotDbRepository<T> : IIotDbRepository<T> where T : IAbstractIotDb, new()
     {
         private readonly IIotDbConnection iotDbConnection;
-        private const string device = "root.device1";
+        //private const string device = "root.device1";
         private readonly ILogger<IotDbRepository<T>> logger;
 
         public IotDbRepository(ConnectionService iotDbConnection, ILogger<IotDbRepository<T>> logger)
@@ -17,7 +17,7 @@ namespace IotDb.MeasurementManagement.Cpu
             this.logger = logger;
         }
 
-        Task<List<T>> IIotDbRepository<T>.GetPageByTime(DateTime start, DateTime end, int skip, int totalCount)
+        Task<List<T>> IIotDbRepository<T>.GetPageByTime(string device, DateTime start, DateTime end, int skip, int totalCount)
         {
             SessionPool sessionPool = iotDbConnection.GetSessionPool();
             DateTimeOffset startOffset = DateTime.SpecifyKind(start, DateTimeKind.Utc);
@@ -37,16 +37,16 @@ namespace IotDb.MeasurementManagement.Cpu
                 {
                     Time = record.GetDateTime(),
                     Timeseries = record.Measurements[0],
-                    Value = (float)record.Values[0]
+                    Value = record.Values[0]
                 };
                 result.Add(entity);
             }
             return Task.FromResult(result);
         }
-        public async Task<int> Insert(T t)
+        public async Task<int> Insert(string device, T t)
         {
             SessionPool sessionPool = iotDbConnection.GetSessionPool();
-            int rtn = await sessionPool.InsertAlignedRecordAsync("root.device1", new RowRecord(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), [2F], [T.Measurement]));
+            int rtn = await sessionPool.InsertAlignedRecordAsync("root.device1", new RowRecord(DateTime.UtcNow, [t.Value], [T.Measurement]));
             return rtn;
         }
     }
