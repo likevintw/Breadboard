@@ -1,7 +1,5 @@
 using IotDb.MeasurementManagement.Cpu;
-using IotDb.MeasurementManagement.IotDb;
 using IotDb.MeasurementManagement.IotDb.IotDb;
-using IotDb.MeasurementManagement.Moisture;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 

@@ -17,11 +17,6 @@ namespace IotDb.MeasurementManagement.Cpu
 
         public async Task<PagedResultDto<CpuLoadDto>> GetCpuPageByTime(GetCpuPageByTimeRequest request)
         {
-            if (request.StartDateTime.CompareTo(request.EndDateTime) > 0)
-            {
-                throw new ArgumentOutOfRangeException("StartDateTime date time", "StartDateTime is after EndDateTime.");
-            }
-
             var list = await repository.GetPageByTime(request.Device, request.StartDateTime, request.EndDateTime, request.Page.SkipCount, request.Page.MaxResultCount);
             var dto = ObjectMapper.Map<List<CpuLoad>, List<CpuLoadDto>>(list);
             return new PagedResultDto<CpuLoadDto>(dto.Count, dto);

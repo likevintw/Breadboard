@@ -17,10 +17,6 @@ namespace IotDb.MeasurementManagement.Moisture
 
         public async Task<PagedResultDto<SoilMoistureDto>> GetBySoilMoisturePageByTime(GetSoilMoistureByTimeRequest request)
         {
-            if (request.StartDateTime.CompareTo(request.EndDateTime) > 0)
-            {
-                throw new ArgumentOutOfRangeException("StartDateTime date time", "StartDateTime date time is after end date time.");
-            }
             List<SoilMoisture> list = await repository.GetPageByTime(request.Device, request.StartDateTime, request.EndDateTime, request.Page.SkipCount, request.Page.MaxResultCount);
             List<SoilMoistureDto> dtos = ObjectMapper.Map<List<SoilMoisture>, List<SoilMoistureDto>>(list);
             return new PagedResultDto<SoilMoistureDto>(dtos.Count, dtos);
