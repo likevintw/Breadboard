@@ -70,8 +70,9 @@ namespace MyAbpApp.NatsEventHandlers
             while (!cancellationToken.IsCancellationRequested)
             {
                 Console.WriteLine("Run Background Process");
-                await _queueRepository.CreatePercentageWorker(cancellationToken, "Percentager", "ReturnPercentage", "1.0.1", "transfer to percentage");
-                await _queueRepository.GetPercentageWorkerValue(cancellationToken);
+                await _queueRepository.CreateCompensationWorker(cancellationToken, "Percentager", "ReturnPercentage", "1.0.1", "transfer to percentage");
+                await _queueRepository.GetCompensationWorkerValue(cancellationToken);
+                _ = Task.Run(() => SubPercentageChannel(cancellationToken));
                 Console.WriteLine("Run Background Process END");
 
                 // 可選：設定一些延遲，防止過於頻繁地啟動新任務
@@ -85,7 +86,7 @@ namespace MyAbpApp.NatsEventHandlers
             {
                 double value = 0.0;
                 // 改成有限次數循環而不是無窮循環
-                value = await _queueRepository?.GetPercentageWorkerValue(cancellationToken);
+                value = await _queueRepository?.GetCompensationWorkerValue(cancellationToken);
                 Console.WriteLine($"SubPercentageChannel got {value}");
 
                 await Task.Delay(2000, cancellationToken);  // 等待2秒

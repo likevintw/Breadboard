@@ -20,7 +20,7 @@ namespace MyAbpApp.NatsRepositories
     public class NatsRepository : IQueueRepository
     {
 
-        Guid compensationId = Guid.Parse("3a17fd1e-0b42-6d2c-b330-1bbc3d46f470");
+        Guid compensationId = Guid.Parse("3a17ffc5-70ce-b0b3-6e8d-14b99adabe92");
         private NatsClient _Client;
         private readonly MyAbpAppDbContext _dbContext;
         private readonly IRepository<Compensation, Guid> _compensationRepository;  // 使用 IRepository
@@ -48,7 +48,7 @@ namespace MyAbpApp.NatsRepositories
         ~NatsRepository()
         {
         }
-        public async Task CreatePercentageWorker(
+        public async Task CreateCompensationWorker(
             CancellationToken cancellationToken, string serviceName, string functionName, string serviceVersion, string serviceDescription)
         {
             var svc = _Client.CreateServicesContext();
@@ -60,7 +60,7 @@ namespace MyAbpApp.NatsRepositories
 
 
             var root = await service.AddGroupAsync(serviceName, serviceVersion);
-            await root.AddEndpointAsync(ReturnPercentage, functionName, serializer: NatsJsonSerializer<double>.Default);
+            await root.AddEndpointAsync(ReturnCompensatedValue, functionName, serializer: NatsJsonSerializer<double>.Default);
             Console.WriteLine($"add {serviceName} service, version {serviceVersion}");
 
 
@@ -77,7 +77,7 @@ namespace MyAbpApp.NatsRepositories
 
 
 
-            async ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
+            async ValueTask ReturnCompensatedValue(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
                 // PG Dbcontext
@@ -117,7 +117,7 @@ namespace MyAbpApp.NatsRepositories
         //     Console.WriteLine("GetPercentageWorkerValue has been canceled and is exiting.");
 
         // }
-        public async Task<double> GetPercentageWorkerValue(CancellationToken cancellationToken)
+        public async Task<double> GetCompensationWorkerValue(CancellationToken cancellationToken)
         {
             double value = 0;
 
@@ -128,7 +128,6 @@ namespace MyAbpApp.NatsRepositories
                 {
                     // 讀取 channel 的資料，這是非同步操作
                     value = await _percentageWorkerChannel.Reader.ReadAsync(cancellationToken);  // 傳遞 CancellationToken 來響應取消請求
-
                     Console.WriteLine($"Value {value} read from channel.");
                     return value;
                 }
