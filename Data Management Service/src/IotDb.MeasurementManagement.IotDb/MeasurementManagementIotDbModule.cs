@@ -5,7 +5,7 @@ using IotDb.MeasurementManagement.Moisture;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 
-namespace IotDb.MeasurementManagement.EntityFrameworkCore;
+namespace IotDb.MeasurementManagement.IotDb;
 
 [DependsOn(
     typeof(MeasurementManagementDomainModule)
