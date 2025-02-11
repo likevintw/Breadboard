@@ -1,0 +1,54 @@
+{
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "DataPointManagement.Domain": {
+      "path": "src/DataPointManagement.Domain/DataPointManagement.Domain.abppkg",
+      "folder": "src"
+    },
+    "DataPointManagement.Application.Contracts": {
+      "path": "src/DataPointManagement.Application.Contracts/DataPointManagement.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "DataPointManagement.Application": {
+      "path": "src/DataPointManagement.Application/DataPointManagement.Application.abppkg",
+      "folder": "src"
+    },
+    "DataPointManagement.EntityFrameworkCore": {
+      "path": "src/DataPointManagement.EntityFrameworkCore/DataPointManagement.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "DataPointManagement.HttpApi": {
+      "path": "src/DataPointManagement.HttpApi/DataPointManagement.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "DataPointManagement.HttpApi.Client": {
+      "path": "src/DataPointManagement.HttpApi.Client/DataPointManagement.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "DataPointManagement.TestBase": {
+      "path": "test/DataPointManagement.TestBase/DataPointManagement.TestBase.abppkg",
+      "folder": "test"
+    },
+    "DataPointManagement.EntityFrameworkCore.Tests": {
+      "path": "test/DataPointManagement.EntityFrameworkCore.Tests/DataPointManagement.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "DataPointManagement.Domain.Tests": {
+      "path": "test/DataPointManagement.Domain.Tests/DataPointManagement.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "DataPointManagement.Application.Tests": {
+      "path": "test/DataPointManagement.Application.Tests/DataPointManagement.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "DataPointManagement.Domain.Shared": {
+      "path": "src/DataPointManagement.Domain.Shared/DataPointManagement.Domain.Shared.abppkg",
+      "folder": "src"
+    }
+  }
+}
