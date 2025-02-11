@@ -131,6 +131,7 @@ public class MyAbpAppWebModule : AbpModule
         context.Services.AddSingleton<IWorkManager, NatsImplement>();
         context.Services.AddSingleton<ICompensationService, CompensationService>();
         context.Services.AddHostedService<BackgroundHandler>();
+        context.Services.AddSingleton<MyAbpAppDbContext>();
 
 
         var hostingEnvironment = context.Services.GetHostingEnvironment();
