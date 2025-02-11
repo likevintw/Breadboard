@@ -101,11 +101,11 @@ namespace MyAbpApp.NatsImplements
                     // Object name: 'MyAbpAppDbContext'.
                     // var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == deviceId);
                     Console.WriteLine($"222222222");
-                    if (contexturalPhysicalQuality == null)
-                    {
-                        Console.WriteLine("No record found for DeviceId");
-                        throw new ArgumentException("DeviceId not found.");
-                    }
+                    // if (contexturalPhysicalQuality == null)
+                    // {
+                    //     Console.WriteLine("No record found for DeviceId");
+                    //     throw new ArgumentException("DeviceId not found.");
+                    // }
                     Console.WriteLine($"WWWWWWWWWW");
                     // Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
                     // Console.WriteLine($"{contexturalPhysicalQuality.Process}");
