@@ -37,6 +37,11 @@ namespace MyAbpApp.ContexturalPhysicalQualityServices
             var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.GetAsync(id);
             return ObjectMapper.Map<ContexturalPhysicalQuality, ContexturalPhysicalQualityDto>(contexturalPhysicalQuality);
         }
+        public async Task<List<ContexturalPhysicalQualityDto>> GetAllAsync()
+        {
+            var contexturalPhysicalQualities = await _contexturalPhysicalQualityRepository.GetListAsync();
+            return ObjectMapper.Map<List<ContexturalPhysicalQuality>, List<ContexturalPhysicalQualityDto>>(contexturalPhysicalQualities);
+        }
 
         public async Task<ContexturalPhysicalQualityDto> UpdateAsync(Guid id, CreateOrUpdateContexturalPhysicalQualityDto input)
         {
