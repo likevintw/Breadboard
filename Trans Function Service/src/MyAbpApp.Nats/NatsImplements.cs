@@ -95,8 +95,10 @@ namespace MyAbpApp.NatsImplements
                 try
                 {
                     Console.WriteLine($"11111111111");
+                    var query = await _contexturalPhysicalQualityRepository.GetQueryableAsync();
+                    var contexturalPhysicalQuality = query.FirstOrDefault(x => x.DeviceId == deviceId);
+
                     // var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == deviceId);
-                    var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.GetAsync(deviceId);
                     Console.WriteLine($"222222222");
                     if (contexturalPhysicalQuality == null)
                     {
@@ -104,8 +106,8 @@ namespace MyAbpApp.NatsImplements
                         throw new ArgumentException("DeviceId not found.");
                     }
                     Console.WriteLine($"WWWWWWWWWW");
-                    // Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
-                    // Console.WriteLine($"{contexturalPhysicalQuality.Process}");
+                    Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
+                    Console.WriteLine($"{contexturalPhysicalQuality.Process}");
                 }
                 catch (Exception ex)
                 {
