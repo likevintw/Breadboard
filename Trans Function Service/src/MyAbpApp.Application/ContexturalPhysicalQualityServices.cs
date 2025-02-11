@@ -23,7 +23,8 @@ namespace MyAbpApp.ContexturalPhysicalQualityServices
         {
             var contexturalPhysicalQuality = new ContexturalPhysicalQuality
             {
-                Process = input.Process
+                Process = input.Process,
+                DeviceId = input.DeviceId
             };
 
             await _contexturalPhysicalQualityRepository.InsertAsync(contexturalPhysicalQuality);
