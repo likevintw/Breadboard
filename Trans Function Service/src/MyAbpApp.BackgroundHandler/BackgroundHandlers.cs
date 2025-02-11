@@ -71,8 +71,6 @@ namespace MyAbpApp.BackgroundHandlers
                 var cpqTask = _workManager.CreateContexturalPhysicalQualityWorker(cancellationToken, "5.7.7", "Contextural Physical Quality Service");
 
                 await Task.WhenAll(cpqTask);
-
-                _ = Task.Run(() => SubPercentageChannel(cancellationToken));
                 await Task.Delay(1000, cancellationToken);
             }
         }

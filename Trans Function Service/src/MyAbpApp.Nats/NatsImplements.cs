@@ -150,7 +150,6 @@ namespace MyAbpApp.NatsImplements
             async ValueTask ReturnPercentage(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
-                await _percentageWorkerChannel.Writer.WriteAsync(msg.Data);
                 await msg.ReplyAsync($"{msg.Data * 100}");
             }
         }
@@ -180,7 +179,6 @@ namespace MyAbpApp.NatsImplements
                 // 當取消請求時，捕捉 OperationCanceledException 並處理取消邏輯
                 Console.WriteLine("CreateCompensationWorker was canceled.");
             }
-
             async ValueTask ReturnCompensatedValue(NatsSvcMsg<double> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
@@ -188,9 +186,6 @@ namespace MyAbpApp.NatsImplements
                 var compensation = await _compensationRepository.GetAsync(compensationId);
                 Console.WriteLine($"CompensationDto ID: {compensation.Id}");
                 Console.WriteLine($"CompensationDto Value: {compensation.CompensationValue}");
-
-                // 將數據寫入 channel
-                await _percentageWorkerChannel.Writer.WriteAsync(msg.Data + compensation.CompensationValue);
 
                 // 進行回覆
                 await msg.ReplyAsync($"{msg.Data + compensation.CompensationValue}");
