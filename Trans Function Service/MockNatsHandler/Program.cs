@@ -15,7 +15,6 @@ namespace MockNatsClient
         public string? DeviceId { get; set; }
         public double? OriginalValue { get; set; }
         public double? ResultValue { get; set; }
-        public string? Message { get; set; }
     }
     class Program
     {
@@ -104,34 +103,55 @@ namespace MockNatsClient
 
             string serviceName = "ContexturalPhysicalQualityService";
             string functionName = "ReturnContexturalPhysicalQualityValue";
+            List<PhysicalQuality> testCases = new List<PhysicalQuality>();
 
-            PhysicalQuality DeviceId = new PhysicalQuality
+            PhysicalQuality percetageOne = new PhysicalQuality
             {
                 DeviceId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                OriginalValue = 10.2,
-                ResultValue = 0.0,
-                Message = "message"
-            }; PhysicalQuality Id = new PhysicalQuality
-            {
-                DeviceId = "3a180534-9992-b26c-4db8-402b5927e923",
-                OriginalValue = 10.2,
-                ResultValue = 0.0,
-                Message = "message"
+                OriginalValue = 0.12,
+                ResultValue = 0.0
             };
-            var result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: DeviceId);
-            result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: Id);
-            // for (int i = 1; i < 100; i++)
-            // {
-            //     Console.WriteLine($"CreateSendStringWorker {i} request: {request.DeviceId}");
-            //     Console.WriteLine($"CreateSendStringWorker {i} request: {request.OriginalValue}");
-            //     Console.WriteLine($"CreateSendStringWorker {i} request: {request.ResultValue}");
-            //     result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: request);
-            //     Console.WriteLine($"CreateSendStringWorker {i} got reply: {result.Data.DeviceId}");
-            //     Console.WriteLine($"CreateSendStringWorker {i} got reply: {result.Data.OriginalValue}");
-            //     Console.WriteLine($"CreateSendStringWorker {i} got reply: {result.Data.ResultValue}");
-            //     // Console.WriteLine("data type: " + result.Data.GetType());
-            //     await Task.Delay(1600);
-            // }
+            testCases.Add(percetageOne);
+
+            PhysicalQuality fahrenheitToCelsius = new PhysicalQuality
+            {
+                DeviceId = "8fa85f64-4562-4562-b3fc-2c963f66afa6",
+                OriginalValue = 10.2,
+                ResultValue = 0.0
+            };
+            testCases.Add(fahrenheitToCelsius);
+
+            PhysicalQuality celsiusToFahrenheit = new PhysicalQuality
+            {
+                DeviceId = "d1c2c9fb-59f4-4b02-8c39-680b212a73e2",
+                OriginalValue = 10.2,
+                ResultValue = 0.0
+            };
+            testCases.Add(celsiusToFahrenheit);
+
+            PhysicalQuality honeywellCompensation = new PhysicalQuality
+            {
+                DeviceId = "cd69ccf2-4f99-42bc-b5ad-281b8b3fdb61",
+                OriginalValue = 10.2,
+                ResultValue = 0.0
+            };
+            testCases.Add(honeywellCompensation);
+            PhysicalQuality sonyCompensation = new PhysicalQuality
+            {
+                DeviceId = "62a37b23-3fd9-4042-88f2-5f8251a36f80",
+                OriginalValue = 128.98,
+                ResultValue = 0.0
+            };
+            testCases.Add(sonyCompensation);
+
+            foreach (var testCaes in testCases)
+            {
+                var result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: testCaes);
+                Console.WriteLine($"ContexturalPhysicalQualityProducer got reply: {result.Data.DeviceId}");
+                Console.WriteLine($"ContexturalPhysicalQualityProducer got reply: {result.Data.OriginalValue}");
+                Console.WriteLine($"ContexturalPhysicalQualityProducer got reply: {result.Data.ResultValue}");
+                Console.WriteLine("");
+            }
             Console.WriteLine("Bye!");
         }
         public static async Task CreateFahrenheitToCelsiusProducer()

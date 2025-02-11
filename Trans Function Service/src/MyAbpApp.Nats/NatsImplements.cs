@@ -23,12 +23,10 @@ namespace MyAbpApp.NatsImplements
         public string? DeviceId { get; set; }
         public double? OriginalValue { get; set; }
         public double? ResultValue { get; set; }
-        public string? Message { get; set; }
     }
     public class NatsImplement : IWorkManager
     {
         Guid compensationId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
-        private readonly MyAbpAppDbContext _dbContext;
         private NatsClient _Client;
         private readonly IRepository<Compensation, Guid> _compensationRepository;  // 使用 IRepository
         private readonly IRepository<ContexturalPhysicalQuality, Guid> _contexturalPhysicalQualityRepository;  // 使用 IRepository
@@ -93,14 +91,39 @@ namespace MyAbpApp.NatsImplements
                 Console.WriteLine($"device Id = {deviceId}");
                 try
                 {
-                    var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == deviceId);
+                    var queryResult = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == deviceId);
 
-                    if (contexturalPhysicalQuality == null)
+                    if (queryResult == null)
                     {
                         throw new ArgumentException("DeviceId not found.");
                     }
-                    Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
-                    Console.WriteLine($"{contexturalPhysicalQuality.Process}");
+                    Console.WriteLine($"{queryResult.DeviceId}");
+                    Console.WriteLine($"{queryResult.Process}");
+                    switch ($"{queryResult.Process}")
+                    {
+                        case "Percentage":
+                            msg.Data.ResultValue = msg.Data.OriginalValue * 100;
+                            break;
+
+                        case "FahrenheitToCelsius":
+                            msg.Data.ResultValue = (msg.Data.OriginalValue.Value - 32) * 5 / 9;
+                            break;
+
+                        case "CelsiusToFahrenheit":
+                            msg.Data.ResultValue = msg.Data.OriginalValue.Value * 9 / 5 + 32;
+                            break;
+
+                        case "HoneywellCompensation":
+                            msg.Data.ResultValue = msg.Data.OriginalValue.Value + 10;
+                            break;
+
+                        case "SonyCompensation":
+                            msg.Data.ResultValue = msg.Data.OriginalValue.Value + 20;
+                            break;
+                        default:
+                            msg.Data.ResultValue = msg.Data.OriginalValue;
+                            break;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -108,8 +131,8 @@ namespace MyAbpApp.NatsImplements
                     throw;
                 }
 
-                msg.Data.ResultValue = 99.99;
                 await msg.ReplyAsync(msg.Data);
+
             }
         }
         public async Task CreateTemperatureUnitTransferWorker(
