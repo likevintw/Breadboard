@@ -18,9 +18,15 @@ using MyAbpApp.EntityFrameworkCore;
 
 namespace MyAbpApp.NatsImplements
 {
+    public class PhysicalQuality
+    {
+        public string? DeviceId { get; set; }
+        public double? OriginalValue { get; set; }
+        public double? ResultValue { get; set; }
+        public string? Message { get; set; }
+    }
     public class NatsImplement : IWorkManager
     {
-
         Guid compensationId = Guid.Parse("3a17ffc5-70ce-b0b3-6e8d-14b99adabe92");
         Guid deviceId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
         private NatsClient _Client;
@@ -62,7 +68,7 @@ namespace MyAbpApp.NatsImplements
             });
 
             var root = await service.AddGroupAsync(ServiceName, serviceVersion);
-            await root.AddEndpointAsync(ReturnCpqValue, FunctionName, serializer: NatsJsonSerializer<string>.Default);
+            await root.AddEndpointAsync(ReturnCpqValue, FunctionName, serializer: NatsJsonSerializer<PhysicalQuality>.Default);
             Console.WriteLine($"add {ServiceName} service, version {serviceVersion}");
 
             try
@@ -76,24 +82,25 @@ namespace MyAbpApp.NatsImplements
                 Console.WriteLine("CreateCompensationWorker was canceled.");
             }
 
-            async ValueTask ReturnCpqValue(NatsSvcMsg<string> msg)
+            async ValueTask ReturnCpqValue(NatsSvcMsg<PhysicalQuality> msg)
             {
-                Console.WriteLine($"show on worker {msg.Data}");
-                Console.WriteLine($"{deviceId}");
-                Console.WriteLine($"QQQQQQQQQQQ");
-                var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == deviceId);
-                Console.WriteLine($"KKKKKKKKKK");
-                if (contexturalPhysicalQuality == null)
-                {
-                    // 如果查詢不到資料，可以拋出自定義異常或返回錯誤
-                    // throw new UserFriendlyException("DeviceId not found.");
-                    Console.WriteLine($"No Device ID");
-                }
-                Console.WriteLine($"YYYYYYYYYY");
-                Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
-                Console.WriteLine($"{contexturalPhysicalQuality.Process}");
+                Console.WriteLine($"got {msg.Data.DeviceId}");
+                Console.WriteLine($"got {msg.Data.OriginalValue}");
 
-                await msg.ReplyAsync($"Todo");
+                Console.WriteLine($"{deviceId}");
+                // var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.Id == deviceId);
+                // if (contexturalPhysicalQuality == null)
+                // {
+                //     // 如果查詢不到資料，可以拋出自定義異常或返回錯誤
+                //     // throw new UserFriendlyException("DeviceId not found.");
+                //     Console.WriteLine($"No Device ID");
+                // }
+                // Console.WriteLine($"YYYYYYYYYY");
+                // Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
+                // Console.WriteLine($"{contexturalPhysicalQuality.Process}");
+
+                msg.Data.ResultValue = 99.99;
+                await msg.ReplyAsync(msg.Data);
             }
         }
         public async Task CreateTemperatureUnitTransferWorker(
