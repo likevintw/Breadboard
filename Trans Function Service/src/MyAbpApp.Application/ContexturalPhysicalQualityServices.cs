@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.UI;
 using MyAbpApp.ContexturalPhysicalQualities;
 using MyAbpApp.ContexturalPhysicalQualityDtos;
 using MyAbpApp.IContexturalPhysicalQualityServices;
@@ -21,6 +22,15 @@ namespace MyAbpApp.ContexturalPhysicalQualityServices
         { }
         public async Task<ContexturalPhysicalQualityDto> CreateAsync(CreateOrUpdateContexturalPhysicalQualityDto input)
         {
+            var existingEntity = await _contexturalPhysicalQualityRepository
+                .FirstOrDefaultAsync(x => x.DeviceId == input.DeviceId);
+
+            if (existingEntity != null)
+            {
+                throw new ArgumentException("The DeviceId already exists in the database.");
+            }
+
+            // 如果不存在，則插入新的資料
             var contexturalPhysicalQuality = new ContexturalPhysicalQuality
             {
                 Process = input.Process,
@@ -29,6 +39,7 @@ namespace MyAbpApp.ContexturalPhysicalQualityServices
 
             await _contexturalPhysicalQualityRepository.InsertAsync(contexturalPhysicalQuality);
 
+            // 返回 DTO
             return ObjectMapper.Map<ContexturalPhysicalQuality, ContexturalPhysicalQualityDto>(contexturalPhysicalQuality);
         }
 
