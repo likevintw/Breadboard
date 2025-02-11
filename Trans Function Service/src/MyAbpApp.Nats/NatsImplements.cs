@@ -96,7 +96,7 @@ namespace MyAbpApp.NatsImplements
                 {
                     Console.WriteLine($"11111111111");
                     var query = await _contexturalPhysicalQualityRepository.GetQueryableAsync();
-                    var contexturalPhysicalQuality = query.FirstOrDefault(x => x.DeviceId == deviceId);
+                    // var contexturalPhysicalQuality = query.FirstOrDefault(x => x.DeviceId == deviceId);
                     // Error occurred: Cannot access a disposed context instance. A common cause of this error is disposing a context instance that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling 'Dispose' on the context instance, or wrapping it in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
                     // Object name: 'MyAbpAppDbContext'.
                     // var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == deviceId);
@@ -107,8 +107,8 @@ namespace MyAbpApp.NatsImplements
                         throw new ArgumentException("DeviceId not found.");
                     }
                     Console.WriteLine($"WWWWWWWWWW");
-                    Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
-                    Console.WriteLine($"{contexturalPhysicalQuality.Process}");
+                    // Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
+                    // Console.WriteLine($"{contexturalPhysicalQuality.Process}");
                 }
                 catch (Exception ex)
                 {
