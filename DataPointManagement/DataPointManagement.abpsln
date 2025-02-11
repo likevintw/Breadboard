@@ -1,0 +1,9 @@
+{
+  "id": "e272d8da-9926-4359-bd2f-040a248837bd",
+  "template": "empty",
+  "modules": {
+    "DataPointManagement": {
+      "path": "DataPointManagement.abpmdl"
+    }
+  }
+}
