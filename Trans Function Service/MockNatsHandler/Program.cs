@@ -105,26 +105,33 @@ namespace MockNatsClient
             string serviceName = "ContexturalPhysicalQualityService";
             string functionName = "ReturnContexturalPhysicalQualityValue";
 
-            PhysicalQuality request = new PhysicalQuality
+            PhysicalQuality DeviceId = new PhysicalQuality
             {
-                DeviceId = "33a3586e-f11e-4090-815b-5c4ff215e292",
+                DeviceId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                OriginalValue = 10.2,
+                ResultValue = 0.0,
+                Message = "message"
+            }; PhysicalQuality Id = new PhysicalQuality
+            {
+                DeviceId = "3a180534-9992-b26c-4db8-402b5927e923",
                 OriginalValue = 10.2,
                 ResultValue = 0.0,
                 Message = "message"
             };
-            var result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: request);
-            for (int i = 1; i < 100; i++)
-            {
-                Console.WriteLine($"CreateSendStringWorker {i} request: {request.DeviceId}");
-                Console.WriteLine($"CreateSendStringWorker {i} request: {request.OriginalValue}");
-                Console.WriteLine($"CreateSendStringWorker {i} request: {request.ResultValue}");
-                result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: request);
-                Console.WriteLine($"CreateSendStringWorker {i} got reply: {result.Data.DeviceId}");
-                Console.WriteLine($"CreateSendStringWorker {i} got reply: {result.Data.OriginalValue}");
-                Console.WriteLine($"CreateSendStringWorker {i} got reply: {result.Data.ResultValue}");
-                // Console.WriteLine("data type: " + result.Data.GetType());
-                await Task.Delay(1600);
-            }
+            var result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: DeviceId);
+            result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: Id);
+            // for (int i = 1; i < 100; i++)
+            // {
+            //     Console.WriteLine($"CreateSendStringWorker {i} request: {request.DeviceId}");
+            //     Console.WriteLine($"CreateSendStringWorker {i} request: {request.OriginalValue}");
+            //     Console.WriteLine($"CreateSendStringWorker {i} request: {request.ResultValue}");
+            //     result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: request);
+            //     Console.WriteLine($"CreateSendStringWorker {i} got reply: {result.Data.DeviceId}");
+            //     Console.WriteLine($"CreateSendStringWorker {i} got reply: {result.Data.OriginalValue}");
+            //     Console.WriteLine($"CreateSendStringWorker {i} got reply: {result.Data.ResultValue}");
+            //     // Console.WriteLine("data type: " + result.Data.GetType());
+            //     await Task.Delay(1600);
+            // }
             Console.WriteLine("Bye!");
         }
         public static async Task CreateFahrenheitToCelsiusProducer()

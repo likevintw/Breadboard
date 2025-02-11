@@ -13,8 +13,8 @@ using MyAbpApp.IWorkManagers;
 using Volo.Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MyAbpApp.Compensations;
-using MyAbpApp.ContexturalPhysicalQualities;
 using MyAbpApp.EntityFrameworkCore;
+using MyAbpApp.ContexturalPhysicalQualities;
 
 namespace MyAbpApp.NatsImplements
 {
@@ -27,16 +27,20 @@ namespace MyAbpApp.NatsImplements
     }
     public class NatsImplement : IWorkManager
     {
-        Guid compensationId = Guid.Parse("3a17ffc5-70ce-b0b3-6e8d-14b99adabe92");
-        Guid deviceId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+        Guid compensationId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+        private readonly MyAbpAppDbContext _dbContext;
         private NatsClient _Client;
         private readonly IRepository<Compensation, Guid> _compensationRepository;  // 使用 IRepository
         private readonly IRepository<ContexturalPhysicalQuality, Guid> _contexturalPhysicalQualityRepository;  // 使用 IRepository
         private Compensation compensation = null;
 
-        public NatsImplement(MyAbpAppDbContext dbContext, IRepository<Compensation, Guid> compensationRepository)
+        public NatsImplement(MyAbpAppDbContext dbContext,
+        IRepository<Compensation, Guid> compensationRepository,
+        IRepository<ContexturalPhysicalQuality, Guid> contexturalPhysicalQualityRepository)
         {
+            _dbContext = dbContext;
             _compensationRepository = compensationRepository;
+            _contexturalPhysicalQualityRepository = contexturalPhysicalQualityRepository;
 
             var url = Environment.GetEnvironmentVariable("NATS_URL") ?? "nats_demo:4222";
             var username = Environment.GetEnvironmentVariable("NATS_USERNAME") ?? "username";
@@ -86,18 +90,28 @@ namespace MyAbpApp.NatsImplements
             {
                 Console.WriteLine($"got {msg.Data.DeviceId}");
                 Console.WriteLine($"got {msg.Data.OriginalValue}");
-
-                Console.WriteLine($"{deviceId}");
-                // var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.Id == deviceId);
-                // if (contexturalPhysicalQuality == null)
-                // {
-                //     // 如果查詢不到資料，可以拋出自定義異常或返回錯誤
-                //     // throw new UserFriendlyException("DeviceId not found.");
-                //     Console.WriteLine($"No Device ID");
-                // }
-                // Console.WriteLine($"YYYYYYYYYY");
-                // Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
-                // Console.WriteLine($"{contexturalPhysicalQuality.Process}");
+                Guid deviceId = Guid.Parse($"{msg.Data.DeviceId}");
+                Console.WriteLine($"device Id = {deviceId}");
+                try
+                {
+                    Console.WriteLine($"11111111111");
+                    // var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == deviceId);
+                    var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.GetAsync(deviceId);
+                    Console.WriteLine($"222222222");
+                    if (contexturalPhysicalQuality == null)
+                    {
+                        Console.WriteLine("No record found for DeviceId");
+                        throw new ArgumentException("DeviceId not found.");
+                    }
+                    Console.WriteLine($"WWWWWWWWWW");
+                    // Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
+                    // Console.WriteLine($"{contexturalPhysicalQuality.Process}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error occurred: {ex.Message}");
+                    throw;
+                }
 
                 msg.Data.ResultValue = 99.99;
                 await msg.ReplyAsync(msg.Data);

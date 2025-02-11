@@ -53,21 +53,20 @@ namespace MyAbpApp.ContexturalPhysicalQualityServices
             var contexturalPhysicalQualities = await _contexturalPhysicalQualityRepository.GetListAsync();
             return ObjectMapper.Map<List<ContexturalPhysicalQuality>, List<ContexturalPhysicalQualityDto>>(contexturalPhysicalQualities);
         }
-        // public async Task<ContexturalPhysicalQualityDto> GetByDeviceIdAsync(Guid deviceId)
-        // {
-        //     // 根據 DeviceId 查詢資料
-        //     var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository
-        //         .FirstOrDefaultAsync(x => x.DeviceId == deviceId);
+        public async Task<ContexturalPhysicalQualityDto> GetByDeviceIdAsync(Guid deviceId)
+        {
+            // 根據 DeviceId 查詢資料
+            var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository
+                .FirstOrDefaultAsync(x => x.DeviceId == deviceId);
 
-        //     if (contexturalPhysicalQuality == null)
-        //     {
-        //         // 如果查詢不到資料，可以拋出自定義異常或返回錯誤
-        //         throw new UserFriendlyException("DeviceId not found.");
-        //     }
+            if (contexturalPhysicalQuality == null)
+            {
+                throw new ArgumentException("DeviceId not found.");
+            }
 
-        //     // 返回映射後的 DTO
-        //     return ObjectMapper.Map<ContexturalPhysicalQuality, ContexturalPhysicalQualityDto>(contexturalPhysicalQuality);
-        // }
+            // 返回映射後的 DTO
+            return ObjectMapper.Map<ContexturalPhysicalQuality, ContexturalPhysicalQualityDto>(contexturalPhysicalQuality);
+        }
 
         public async Task<ContexturalPhysicalQualityDto> UpdateAsync(Guid id, CreateOrUpdateContexturalPhysicalQualityDto input)
         {
