@@ -68,26 +68,12 @@ namespace MyAbpApp.BackgroundHandlers
                 // var TemperatureUnitTransferTask = _workManager.CreateTemperatureUnitTransferWorker(cancellationToken, "1.2.1", "Temperature Unit Transfer");
                 // var percentageWorkerTask = _workManager.CreatePercentageWorker(cancellationToken, "2.9.3", "Get Percentage Value");
                 // var compensationWorkerTask = _workManager.CreateCompensationWorker(cancellationToken, "3.2.6", "Get Compensated Value");
-                // var compensationWorkerValueTask = _workManager.GetCompensationWorkerValue(cancellationToken);
                 var cpqTask = _workManager.CreateContexturalPhysicalQualityWorker(cancellationToken, "5.7.7", "Contextural Physical Quality Service");
 
                 await Task.WhenAll(cpqTask);
 
                 _ = Task.Run(() => SubPercentageChannel(cancellationToken));
                 await Task.Delay(1000, cancellationToken);
-            }
-        }
-
-        public async Task SubPercentageChannel(CancellationToken cancellationToken)
-        {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                double value = 0.0;
-                // 改成有限次數循環而不是無窮循環
-                value = await _workManager?.GetCompensationWorkerValue(cancellationToken);
-                Console.WriteLine($"SubPercentageChannel got {value}");
-
-                await Task.Delay(2000, cancellationToken);  // 等待2秒
             }
         }
     }

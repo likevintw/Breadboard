@@ -13,9 +13,8 @@ namespace MyAbpApp.IWorkManagers
         Task CreateTemperatureUnitTransferWorker(
             CancellationToken cancellationToken, string serviceVersion, string serviceDescription);
         Task CreatePercentageWorker(
-        CancellationToken cancellationToken, string serviceVersion, string serviceDescription);
+            CancellationToken cancellationToken, string serviceVersion, string serviceDescription);
         Task CreateCompensationWorker(
-        CancellationToken cancellationToken, string serviceVersion, string serviceDescription);
-        Task<double> GetCompensationWorkerValue(CancellationToken cancellationToken);
+            CancellationToken cancellationToken, string serviceVersion, string serviceDescription);
     }
 }
