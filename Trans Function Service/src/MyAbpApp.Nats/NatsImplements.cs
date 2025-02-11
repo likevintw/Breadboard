@@ -13,6 +13,7 @@ using MyAbpApp.IWorkManagers;
 using Volo.Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MyAbpApp.Compensations;
+using MyAbpApp.ContexturalPhysicalQualities;
 using MyAbpApp.EntityFrameworkCore;
 
 namespace MyAbpApp.NatsImplements
@@ -21,14 +22,14 @@ namespace MyAbpApp.NatsImplements
     {
 
         Guid compensationId = Guid.Parse("3a17ffc5-70ce-b0b3-6e8d-14b99adabe92");
+        Guid deviceId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
         private NatsClient _Client;
-        private readonly MyAbpAppDbContext _dbContext;
         private readonly IRepository<Compensation, Guid> _compensationRepository;  // 使用 IRepository
+        private readonly IRepository<ContexturalPhysicalQuality, Guid> _contexturalPhysicalQualityRepository;  // 使用 IRepository
         private Compensation compensation = null;
 
         public NatsImplement(MyAbpAppDbContext dbContext, IRepository<Compensation, Guid> compensationRepository)
         {
-            _dbContext = dbContext;
             _compensationRepository = compensationRepository;
 
             var url = Environment.GetEnvironmentVariable("NATS_URL") ?? "nats_demo:4222";
@@ -78,13 +79,21 @@ namespace MyAbpApp.NatsImplements
             async ValueTask ReturnCpqValue(NatsSvcMsg<string> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
-                // PG Dbcontext
-                var compensation = await _compensationRepository.GetAsync(compensationId);
-                Console.WriteLine($"CompensationDto ID: {compensation.Id}");
-                Console.WriteLine($"CompensationDto Value: {compensation.CompensationValue}");
+                Console.WriteLine($"{deviceId}");
+                Console.WriteLine($"QQQQQQQQQQQ");
+                var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == deviceId);
+                Console.WriteLine($"KKKKKKKKKK");
+                if (contexturalPhysicalQuality == null)
+                {
+                    // 如果查詢不到資料，可以拋出自定義異常或返回錯誤
+                    // throw new UserFriendlyException("DeviceId not found.");
+                    Console.WriteLine($"No Device ID");
+                }
+                Console.WriteLine($"YYYYYYYYYY");
+                Console.WriteLine($"{contexturalPhysicalQuality.DeviceId}");
+                Console.WriteLine($"{contexturalPhysicalQuality.Process}");
 
-                // 進行回覆
-                await msg.ReplyAsync($"{msg.Data + compensation.CompensationValue}");
+                await msg.ReplyAsync($"Todo");
             }
         }
         public async Task CreateTemperatureUnitTransferWorker(
@@ -166,7 +175,7 @@ namespace MyAbpApp.NatsImplements
             });
 
             var root = await service.AddGroupAsync(ServiceName, serviceVersion);
-            await root.AddEndpointAsync(ReturnCompensatedValue, FunctionName, serializer: NatsJsonSerializer<double>.Default);
+            await root.AddEndpointAsync(ReturnCompensatedValue, FunctionName, serializer: NatsJsonSerializer<string>.Default);
             Console.WriteLine($"add {ServiceName} service, version {serviceVersion}");
 
             try
@@ -179,7 +188,7 @@ namespace MyAbpApp.NatsImplements
                 // 當取消請求時，捕捉 OperationCanceledException 並處理取消邏輯
                 Console.WriteLine("CreateCompensationWorker was canceled.");
             }
-            async ValueTask ReturnCompensatedValue(NatsSvcMsg<double> msg)
+            async ValueTask ReturnCompensatedValue(NatsSvcMsg<string> msg)
             {
                 Console.WriteLine($"show on worker {msg.Data}");
                 // PG Dbcontext

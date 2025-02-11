@@ -76,7 +76,37 @@ class Program
         }
         Console.WriteLine("Bye!");
     }
+    public static async Task CreateContexturalPhysicalQualityProducer()
+    {
+        var url = Environment.GetEnvironmentVariable("NATS_URL") ?? "nats_demo:4222";
+        var username = Environment.GetEnvironmentVariable("NATS_USERNAME") ?? "username";
+        var password = Environment.GetEnvironmentVariable("NATS_PASSWORD") ?? "password";
 
+        await using var nc = new NatsClient(new NatsOpts
+        {
+            Url = url,
+            AuthOpts = new NatsAuthOpts
+            {
+                Username = username,
+                Password = password,
+            }
+        });
+        var svc = nc.CreateServicesContext();
+
+        string serviceName = "ContexturalPhysicalQualityService";
+        string functionName = "ReturnContexturalPhysicalQualityValue";
+
+        var result = await nc.RequestAsync<string, string>(subject: $"{serviceName}.{functionName}", data: "input");
+        string messageData = "input";
+        for (double i = 1; i < 100; i++)
+        {
+            result = await nc.RequestAsync<string, string>(subject: $"{serviceName}.{functionName}", data: $"{messageData}");
+            Console.WriteLine($"CreateContexturalPhysicalQualityProducer {messageData} got reply: {result.Data}%");
+            // Console.WriteLine("data type: " + result.Data.GetType());
+            await Task.Delay(1600);
+        }
+        Console.WriteLine("Bye!");
+    }
     public static async Task CreateFahrenheitToCelsiusProducer()
     {
         var url = Environment.GetEnvironmentVariable("NATS_URL") ?? "nats_demo:4222";
@@ -143,10 +173,12 @@ class Program
     }
     public static async Task Main(string[] args)
     {
-        var compensatorProducer = Task.Run(async () => await CreateCompensatorProducer());
-        var percentageProducer = Task.Run(async () => await CreatePercentageHandlerProducer());
-        var FahrenheitToCelsiusProducer = Task.Run(async () => await CreateFahrenheitToCelsiusProducer());
-        var CelsiusToFahrenheitProducer = Task.Run(async () => await CreateCelsiusToFahrenheitProducer());
-        await Task.WhenAll(compensatorProducer, percentageProducer, FahrenheitToCelsiusProducer, CelsiusToFahrenheitProducer);
+        // var compensatorProducer = Task.Run(async () => await CreateCompensatorProducer());
+        // var percentageProducer = Task.Run(async () => await CreatePercentageHandlerProducer());
+        // var FahrenheitToCelsiusProducer = Task.Run(async () => await CreateFahrenheitToCelsiusProducer());
+        // var CelsiusToFahrenheitProducer = Task.Run(async () => await CreateCelsiusToFahrenheitProducer());
+        var CpqProducer = Task.Run(async () => await CreateContexturalPhysicalQualityProducer());
+        await Task.WhenAll(CpqProducer);
+        // await Task.WhenAll(compensatorProducer, percentageProducer, FahrenheitToCelsiusProducer, CelsiusToFahrenheitProducer);
     }
 }
