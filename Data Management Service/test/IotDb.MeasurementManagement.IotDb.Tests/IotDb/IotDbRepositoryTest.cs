@@ -23,11 +23,11 @@ namespace IotDb.MeasurementManagement.IotDb.Tests.IotDb
         [Fact]
         public void InsertTest()
         {
-            int rtn = repository.Insert(new SoilMoisture()
+            int rtn = repository.Insert("root.device1", new SoilMoisture()
             {
                 Time = DateTime.Now,
                 Timeseries = "root.device1.moisture",
-                Value = 2F
+                Value = 4F
             }).Result;
             Assert.Equal(0, rtn);
         }

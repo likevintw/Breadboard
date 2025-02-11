@@ -1,10 +1,7 @@
 ﻿using Apache.IoTDB;
 using IotDb.MeasurementManagement.IotDb.IotDb;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Polly;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Modularity;
 
 namespace IotDb.MeasurementManagement.IotDb
 {
