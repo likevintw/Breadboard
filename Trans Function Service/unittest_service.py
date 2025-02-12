@@ -140,7 +140,43 @@ class TestProductAPI(unittest.TestCase):
             },]
         for data in NEW_DATA:
             self.create_compensation(data)
+            
+    def create_cpq(self,new_data):
+            base_url = "http://0.0.0.0:2377/api/app/contextural-physical-quality"
+            headers = {'Content-Type': 'application/json'}
+            response = requests.post(base_url, headers=headers, data=json.dumps(new_data))
+            print("Status Code:", response.status_code)
+            print("Response Text:", response.text)
 
+    def test_create_many_contextural_physical_qualities(self):
+        NEW_DATA = [
+            {
+        "deviceId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "process": "Percentage"
+        },
+        {
+        "deviceId": "8fa85f64-4562-4562-b3fc-2c963f66afa6",
+        "process": "FahrenheitToCelsius"
+        },
+        {
+        "deviceId": "d1c2c9fb-59f4-4b02-8c39-680b212a73e2",
+        "process": "CelsiusToFahrenheit"
+        },
+        {
+        "deviceId": "cd69ccf2-4f99-42bc-b5ad-281b8b3fdb61",
+        "process": "HoneywellCompensation"
+        },
+        {
+        "deviceId": "62a37b23-3fd9-4042-88f2-5f8251a36f80",
+        "process": "SonyCompensation"
+        },
+        {
+        "deviceId": "6d290cc1-d2b1-43ba-a62c-b4a1fa9e34f2",
+        "process": "HoneywellCompensation"
+        },
+        ]
+        for data in NEW_DATA:
+            self.create_cpq(data)
 
 if __name__ == '__main__':
     unittest.main()
