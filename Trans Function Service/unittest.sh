@@ -16,5 +16,6 @@ python3 -m unittest -v unittest_service.TestProductAPI.test_delete_cpq_nats_micr
 
 python3 -m unittest -v unittest_service.TestProductAPI.test_create_compensation
 python3 -m unittest -v unittest_service.TestProductAPI.test_create_many_compensation
+python3 -m unittest -v unittest_service.TestProductAPI.test_create_many_contextural_physical_qualities
 
 python3 -m unittest -v unittest_service
