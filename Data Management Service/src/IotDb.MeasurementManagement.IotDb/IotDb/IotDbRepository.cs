@@ -8,7 +8,6 @@ namespace IotDb.MeasurementManagement.Cpu
     public class IotDbRepository<T> : IIotDbRepository<T> where T : IAbstractIotDb, new()
     {
         private readonly IIotDbConnection iotDbConnection;
-        //private const string device = "root.device1";
         private readonly ILogger<IotDbRepository<T>> logger;
 
         public IotDbRepository(ConnectionService iotDbConnection, ILogger<IotDbRepository<T>> logger)
@@ -17,7 +16,7 @@ namespace IotDb.MeasurementManagement.Cpu
             this.logger = logger;
         }
 
-        Task<List<T>> IIotDbRepository<T>.GetPageByTime(string device, DateTime start, DateTime end, int skip, int totalCount)
+        async Task<List<T>> IIotDbRepository<T>.GetPageByTime(string device, DateTime start, DateTime end, int skip, int totalCount)
         {
             SessionPool sessionPool = iotDbConnection.GetSessionPool();
             DateTimeOffset startOffset = DateTime.SpecifyKind(start, DateTimeKind.Utc);
@@ -28,7 +27,7 @@ namespace IotDb.MeasurementManagement.Cpu
                 $"limit {totalCount} offset {skip} ";
 
             logger.LogDebug(script);
-            SessionDataSet dataSet = sessionPool.ExecuteQueryStatementAsync(script).Result;
+            SessionDataSet dataSet = await sessionPool.ExecuteQueryStatementAsync(script);
             List<T> result = new();
             while (dataSet.HasNext())
             {
@@ -41,12 +40,12 @@ namespace IotDb.MeasurementManagement.Cpu
                 };
                 result.Add(entity);
             }
-            return Task.FromResult(result);
+            return result;
         }
         public async Task<int> Insert(string device, T t)
         {
             SessionPool sessionPool = iotDbConnection.GetSessionPool();
-            int rtn = await sessionPool.InsertAlignedRecordAsync("root.device1", new RowRecord(DateTime.UtcNow, [t.Value], [T.Measurement]));
+            int rtn = await sessionPool.InsertAlignedRecordAsync(device, new RowRecord(DateTime.UtcNow, [t.Value], [T.Measurement]));
             return rtn;
         }
     }

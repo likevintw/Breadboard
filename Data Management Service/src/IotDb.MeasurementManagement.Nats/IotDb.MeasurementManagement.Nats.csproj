@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NATS.Client" Version="1.1.6" />
+		<PackageReference Include="NATS.Client.Services" Version="2.5.7" />
+		<PackageReference Include="NATS.Net" Version="2.5.7" />
+		<PackageReference Include="Volo.Abp.FluentValidation" Version="9.0.4" />
+		<PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="9.0.3" />
+		<PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="9.0.3" />
+		<PackageReference Include="Volo.Abp.SettingManagement.Application" Version="9.0.3" />
+		<PackageReference Include="Volo.Abp.Account.Application" Version="9.0.3" />
+		<PackageReference Include="Volo.Abp.Identity.Application" Version="9.0.3" />
+		<PackageReference Include="Volo.Abp.TenantManagement.Application" Version="9.0.3" />
+	</ItemGroup>
+</Project>
