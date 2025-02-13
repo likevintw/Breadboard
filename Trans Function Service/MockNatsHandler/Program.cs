@@ -143,13 +143,16 @@ namespace MockNatsClient
                 ResultValue = 0.0
             };
             testCases.Add(sonyCompensation);
-
+            Console.WriteLine("");
             foreach (var testCaes in testCases)
             {
+                Console.WriteLine($"Device ID: {testCaes.DeviceId}");
+                Console.WriteLine($"Original Value: {testCaes.OriginalValue}");
+                Console.WriteLine($"cPQ Return Value: {testCaes.ResultValue}");
                 var result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: testCaes);
-                Console.WriteLine($"ContexturalPhysicalQualityProducer got reply: {result.Data.DeviceId}");
-                Console.WriteLine($"ContexturalPhysicalQualityProducer got reply: {result.Data.OriginalValue}");
-                Console.WriteLine($"ContexturalPhysicalQualityProducer got reply: {result.Data.ResultValue}");
+                Console.WriteLine($"Device ID: {result.Data.DeviceId}");
+                Console.WriteLine($"Original Value: {result.Data.OriginalValue}");
+                Console.WriteLine($"cPQ Return Value: {result.Data.ResultValue}");
                 Console.WriteLine("");
             }
             Console.WriteLine("Bye!");
