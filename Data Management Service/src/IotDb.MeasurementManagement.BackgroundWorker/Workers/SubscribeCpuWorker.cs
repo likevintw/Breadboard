@@ -16,10 +16,10 @@ namespace IotDb.MeasurementManagement.BackgroundWorker.Workers
         private const string consumerName = "measurement-insert";
         private IIotDbRepository<CpuLoad> iotDbRepository;
         private ILogger<SubscribeCpuWorker> logger;
-        private readonly CpuRawWorker cpuWorker;
+        private readonly CpuWorker cpuWorker;
         private INatsJSContext context;
         private INatsJSConsumer consumer;
-        public SubscribeCpuWorker(IIotDbRepository<CpuLoad> iotDbRepository, ILogger<SubscribeCpuWorker> logger, CpuRawWorker cpuWorker, INatsConnection natsConnection)
+        public SubscribeCpuWorker(IIotDbRepository<CpuLoad> iotDbRepository, ILogger<SubscribeCpuWorker> logger, CpuWorker cpuWorker, INatsConnection natsConnection)
         {
             this.iotDbRepository = iotDbRepository;
             this.logger = logger;
@@ -43,28 +43,6 @@ namespace IotDb.MeasurementManagement.BackgroundWorker.Workers
         {
             await base.StopAsync(cancellationToken);
             logger.LogDebug("Shut down SubscribeCpuWorker");
-        }
-        private async Task InsertRawDataAsync(NatsJSMsg<double> msg)
-        {
-            logger.LogDebug($"Received subject:{msg.Subject}, data:{msg.Data}");
-            CpuLoad cpu = new()
-            {
-                Time = DateTime.UtcNow,
-                Timeseries = $"root.device1.{CpuLoad.Measurement}",
-                Value = msg.Data
-            };
-            await iotDbRepository.Insert("root.device1", cpu);
-        }
-        private async Task InsertCpqAsync(NatsJSMsg<double> msg)
-        {
-            var res = await natsClient.RequestAsync<string, string>("ContexturalPhysicalQualityService.ReturnContexturalPhysicalQualityValue", msg.Data.ToString());
-            CpuLoad cpu = new()
-            {
-                Timeseries = $"root.device1.cpq.{CpuLoad.Measurement}",
-                Time = DateTime.UtcNow,
-                Value = msg.Data
-            };
-            await iotDbRepository.Insert($"root.device1.cpq.{CpuLoad.Measurement}", cpu);
         }
     }
 }
