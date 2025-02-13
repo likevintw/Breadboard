@@ -58,6 +58,7 @@ namespace IotDb.MeasurementManagement.Web;
     typeof(MeasurementManagementApplicationModule),
     typeof(MeasurementManagementEntityFrameworkCoreModule),
     typeof(MeasurementManagementIotDbModule),
+    typeof(MeasurementManagementBackgroundWorkerModule),
     typeof(AbpAutofacModule),
     typeof(AbpStudioClientAspNetCoreModule),
     typeof(AbpIdentityWebModule),
@@ -84,7 +85,8 @@ public class MeasurementManagementWebModule : AbpModule
                 typeof(MeasurementManagementApplicationModule).Assembly,
                 typeof(MeasurementManagementApplicationContractsModule).Assembly,
                 typeof(MeasurementManagementWebModule).Assembly,
-                typeof(MeasurementManagementIotDbModule).Assembly
+                typeof(MeasurementManagementIotDbModule).Assembly,
+                typeof(MeasurementManagementBackgroundWorkerModule).Assembly
             );
         });
 

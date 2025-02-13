@@ -49,6 +49,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IotDb.MeasurementManagement.Application\IotDb.MeasurementManagement.Application.csproj" />
+    <ProjectReference Include="..\IotDb.MeasurementManagement.BackgroundWorker\IotDb.MeasurementManagement.BackgroundWorker.csproj" />
     <ProjectReference Include="..\IotDb.MeasurementManagement.HttpApi\IotDb.MeasurementManagement.HttpApi.csproj" />
     <ProjectReference Include="..\IotDb.MeasurementManagement.EntityFrameworkCore\IotDb.MeasurementManagement.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\IotDb.MeasurementManagement.IotDb\IotDb.MeasurementManagement.IotDb.csproj" />
