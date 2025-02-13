@@ -10,7 +10,7 @@ namespace IotDb.MeasurementManagement.BackgroundWorker.Workers;
 
 public class SoilMoistureWorker : ITransientDependency
 {
-    private readonly ILogger<CpuRawWorker> logger;
+    private readonly ILogger<CpuWorker> logger;
     private readonly IIotDbRepository<SoilMoisture> iotDbRepository;
     private const string streamName = "stream";
     private const string consumerName = "soil-moisture-raw-insert";
@@ -18,7 +18,7 @@ public class SoilMoistureWorker : ITransientDependency
     private INatsJSContext context;
     private INatsJSConsumer consumer;
 
-    public SoilMoistureWorker(ILogger<CpuRawWorker> logger, IIotDbRepository<SoilMoisture> iotDbRepository, INatsConnection natsConnection)
+    public SoilMoistureWorker(ILogger<CpuWorker> logger, IIotDbRepository<SoilMoisture> iotDbRepository, INatsConnection natsConnection)
     {
         this.logger = logger;
         this.iotDbRepository = iotDbRepository;
@@ -40,6 +40,12 @@ public class SoilMoistureWorker : ITransientDependency
                 Time = DateTime.UtcNow,
                 Timeseries = $"root.device1.{SoilMoisture.Measurement}",
                 Value = msg.Data
+            };
+            //Percentage
+            PhysicalQuality physicalQuality = new PhysicalQuality
+            {
+                DeviceId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                OriginalValue = msg.Data,
             };
             await iotDbRepository.Insert("root.device1", moisture);
             await msg.AckAsync();

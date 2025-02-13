@@ -40,17 +40,5 @@ namespace IotDb.MeasurementManagement.BackgroundWorker.Workers
             await base.StopAsync(cancellationToken);
             logger.LogDebug("Shut down SubscribeCpuWorker");
         }
-
-        // private async Task InsertCpqAsync(NatsJSMsg<double> msg)
-        // {
-        //     var res = await natsClient.RequestAsync<string, string>("ContexturalPhysicalQualityService.ReturnContexturalPhysicalQualityValue", msg.Data.ToString());
-        //     SoilMoisture soilMoisture = new()
-        //     {
-        //         Timeseries = $"root.device1.cpq.{SoilMoisture.Measurement}",
-        //         Time = DateTime.UtcNow,
-        //         Value = msg.Data
-        //     };
-        //     await iotDbRepository.Insert($"root.device1.cpq.{SoilMoisture.Measurement}", soilMoisture);
-        // }
     }
 }
