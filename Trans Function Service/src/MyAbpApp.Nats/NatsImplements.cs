@@ -20,7 +20,7 @@ namespace MyAbpApp.NatsImplements
 {
     public class PhysicalQuality
     {
-        public string? DeviceId { get; set; }
+        public string? SensorId { get; set; }
         public double? OriginalValue { get; set; }
         public double? ResultValue { get; set; }
     }
@@ -85,17 +85,17 @@ namespace MyAbpApp.NatsImplements
 
             async ValueTask ReturnCpqValue(NatsSvcMsg<PhysicalQuality> msg)
             {
-                Console.WriteLine($"got {msg.Data.DeviceId}");
-                Console.WriteLine($"got {msg.Data.OriginalValue}");
-                Guid deviceId = Guid.Parse($"{msg.Data.DeviceId}");
-                Console.WriteLine($"device Id = {deviceId}");
+                Console.WriteLine($"got {msg.Data.SensorId}");
+                Console.WriteLine($"got {msg.Data.SensorId}");
+                Guid sensorId = Guid.Parse($"{msg.Data.SensorId}");
+                Console.WriteLine($"sensor ID = {sensorId}");
                 try
                 {
-                    var queryResult = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == deviceId);
+                    var queryResult = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == sensorId);
 
                     if (queryResult == null)
                     {
-                        throw new ArgumentException("DeviceId not found.");
+                        throw new ArgumentException("Sensor ID not found.");
                     }
                     Console.WriteLine($"{queryResult.DeviceId}");
                     Console.WriteLine($"{queryResult.Process}");
@@ -120,6 +120,11 @@ namespace MyAbpApp.NatsImplements
                         case "SonyCompensation":
                             msg.Data.ResultValue = msg.Data.OriginalValue.Value + 20;
                             break;
+
+                        case "NoChange":
+                            msg.Data.ResultValue = msg.Data.OriginalValue.Value;
+                            break;
+
                         default:
                             msg.Data.ResultValue = msg.Data.OriginalValue;
                             break;

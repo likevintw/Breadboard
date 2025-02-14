@@ -12,7 +12,7 @@ namespace MockNatsClient
 {
     public class PhysicalQuality
     {
-        public string? DeviceId { get; set; }
+        public string? SensorId { get; set; }
         public double? OriginalValue { get; set; }
         public double? ResultValue { get; set; }
     }
@@ -107,7 +107,7 @@ namespace MockNatsClient
 
             PhysicalQuality percetageOne = new PhysicalQuality
             {
-                DeviceId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                SensorId = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                 OriginalValue = 0.12,
                 ResultValue = 0.0
             };
@@ -115,7 +115,7 @@ namespace MockNatsClient
 
             PhysicalQuality fahrenheitToCelsius = new PhysicalQuality
             {
-                DeviceId = "8fa85f64-4562-4562-b3fc-2c963f66afa6",
+                SensorId = "8fa85f64-4562-4562-b3fc-2c963f66afa6",
                 OriginalValue = 10.2,
                 ResultValue = 0.0
             };
@@ -123,7 +123,7 @@ namespace MockNatsClient
 
             PhysicalQuality celsiusToFahrenheit = new PhysicalQuality
             {
-                DeviceId = "d1c2c9fb-59f4-4b02-8c39-680b212a73e2",
+                SensorId = "d1c2c9fb-59f4-4b02-8c39-680b212a73e2",
                 OriginalValue = 10.2,
                 ResultValue = 0.0
             };
@@ -131,26 +131,35 @@ namespace MockNatsClient
 
             PhysicalQuality honeywellCompensation = new PhysicalQuality
             {
-                DeviceId = "cd69ccf2-4f99-42bc-b5ad-281b8b3fdb61",
+                SensorId = "cd69ccf2-4f99-42bc-b5ad-281b8b3fdb61",
                 OriginalValue = 10.2,
                 ResultValue = 0.0
             };
             testCases.Add(honeywellCompensation);
             PhysicalQuality sonyCompensation = new PhysicalQuality
             {
-                DeviceId = "62a37b23-3fd9-4042-88f2-5f8251a36f80",
+                SensorId = "62a37b23-3fd9-4042-88f2-5f8251a36f80",
                 OriginalValue = 128.98,
                 ResultValue = 0.0
             };
             testCases.Add(sonyCompensation);
+
+            PhysicalQuality noChange = new PhysicalQuality
+            {
+                SensorId = "3fa85f64-1711-4562-b3fc-2c963f66afa6",
+                OriginalValue = 312.8,
+                ResultValue = 0.0
+            };
+            testCases.Add(noChange);
+
             Console.WriteLine("");
             foreach (var testCaes in testCases)
             {
-                Console.WriteLine($"Device ID: {testCaes.DeviceId}");
+                Console.WriteLine($"Sensor ID: {testCaes.SensorId}");
                 Console.WriteLine($"Original Value: {testCaes.OriginalValue}");
                 Console.WriteLine($"cPQ Return Value: {testCaes.ResultValue}");
                 var result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: testCaes);
-                Console.WriteLine($"Device ID: {result.Data.DeviceId}");
+                Console.WriteLine($"Sensor ID: {result.Data.SensorId}");
                 Console.WriteLine($"Original Value: {result.Data.OriginalValue}");
                 Console.WriteLine($"cPQ Return Value: {result.Data.ResultValue}");
                 Console.WriteLine("");
