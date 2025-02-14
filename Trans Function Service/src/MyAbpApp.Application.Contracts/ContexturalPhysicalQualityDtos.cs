@@ -6,13 +6,13 @@ namespace MyAbpApp.ContexturalPhysicalQualityDtos
     public class ContexturalPhysicalQualityDto
     {
         public Guid Id { get; set; }
-        public Guid DeviceId { get; set; }
+        public Guid SensorId { get; set; }
         public string Process { get; set; }
     }
 
     public class CreateOrUpdateContexturalPhysicalQualityDto
     {
-        public Guid DeviceId { get; set; }
+        public Guid SensorId { get; set; }
         public string Process { get; set; }
     }
 

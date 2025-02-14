@@ -91,13 +91,13 @@ namespace MyAbpApp.NatsImplements
                 Console.WriteLine($"sensor ID = {sensorId}");
                 try
                 {
-                    var queryResult = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.DeviceId == sensorId);
+                    var queryResult = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.SensorId == sensorId);
 
                     if (queryResult == null)
                     {
                         throw new ArgumentException("Sensor ID not found.");
                     }
-                    Console.WriteLine($"{queryResult.DeviceId}");
+                    Console.WriteLine($"{queryResult.SensorId}");
                     Console.WriteLine($"{queryResult.Process}");
                     switch ($"{queryResult.Process}")
                     {

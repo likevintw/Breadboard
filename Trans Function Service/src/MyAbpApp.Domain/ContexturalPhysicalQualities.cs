@@ -7,6 +7,6 @@ namespace MyAbpApp.ContexturalPhysicalQualities
     public class ContexturalPhysicalQuality : FullAuditedAggregateRoot<Guid>
     {
         public string Process { get; set; }
-        public Guid DeviceId { get; set; }
+        public Guid SensorId { get; set; }
     }
 }

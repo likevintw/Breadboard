@@ -23,18 +23,18 @@ namespace MyAbpApp.ContexturalPhysicalQualityServices
         public async Task<ContexturalPhysicalQualityDto> CreateAsync(CreateOrUpdateContexturalPhysicalQualityDto input)
         {
             var existingEntity = await _contexturalPhysicalQualityRepository
-                .FirstOrDefaultAsync(x => x.DeviceId == input.DeviceId);
+                .FirstOrDefaultAsync(x => x.SensorId == input.SensorId);
 
             if (existingEntity != null)
             {
-                throw new ArgumentException("The DeviceId already exists in the database.");
+                throw new ArgumentException("The SensorId already exists in the database.");
             }
 
             // 如果不存在，則插入新的資料
             var contexturalPhysicalQuality = new ContexturalPhysicalQuality
             {
                 Process = input.Process,
-                DeviceId = input.DeviceId
+                SensorId = input.SensorId
             };
 
             await _contexturalPhysicalQualityRepository.InsertAsync(contexturalPhysicalQuality);
@@ -53,15 +53,15 @@ namespace MyAbpApp.ContexturalPhysicalQualityServices
             var contexturalPhysicalQualities = await _contexturalPhysicalQualityRepository.GetListAsync();
             return ObjectMapper.Map<List<ContexturalPhysicalQuality>, List<ContexturalPhysicalQualityDto>>(contexturalPhysicalQualities);
         }
-        public async Task<ContexturalPhysicalQualityDto> GetByDeviceIdAsync(Guid deviceId)
+        public async Task<ContexturalPhysicalQualityDto> GetBySensorIdAsync(Guid sensorId)
         {
-            // 根據 DeviceId 查詢資料
+            // 根據 SensorId 查詢資料
             var contexturalPhysicalQuality = await _contexturalPhysicalQualityRepository
-                .FirstOrDefaultAsync(x => x.DeviceId == deviceId);
+                .FirstOrDefaultAsync(x => x.SensorId == sensorId);
 
             if (contexturalPhysicalQuality == null)
             {
-                throw new ArgumentException("DeviceId not found.");
+                throw new ArgumentException("Sensor ID not found.");
             }
 
             // 返回映射後的 DTO
