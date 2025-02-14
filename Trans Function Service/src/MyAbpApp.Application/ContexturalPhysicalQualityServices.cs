@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.UI;
+using Volo.Abp;
 using MyAbpApp.ContexturalPhysicalQualities;
 using MyAbpApp.ContexturalPhysicalQualityDtos;
 using MyAbpApp.IContexturalPhysicalQualityServices;
@@ -27,7 +28,7 @@ namespace MyAbpApp.ContexturalPhysicalQualityServices
 
             if (existingEntity != null)
             {
-                throw new ArgumentException("The SensorId already exists in the database.");
+                throw new UserFriendlyException("The SensorId already exists in the database.", "E1854");
             }
 
             // 如果不存在，則插入新的資料
