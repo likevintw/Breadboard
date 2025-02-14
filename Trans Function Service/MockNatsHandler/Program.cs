@@ -152,6 +152,14 @@ namespace MockNatsClient
             };
             testCases.Add(noChange);
 
+            PhysicalQuality notExist = new PhysicalQuality
+            {
+                SensorId = "1fa85f64-1111-4562-b1fc-2c963f66afa6",
+                OriginalValue = 312.8,
+                ResultValue = 0.0
+            };
+            testCases.Add(notExist);
+
             Console.WriteLine("");
             foreach (var testCaes in testCases)
             {

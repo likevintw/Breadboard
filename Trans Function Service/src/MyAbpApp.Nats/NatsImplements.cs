@@ -86,16 +86,25 @@ namespace MyAbpApp.NatsImplements
             async ValueTask ReturnCpqValue(NatsSvcMsg<PhysicalQuality> msg)
             {
                 Console.WriteLine($"got {msg.Data.SensorId}");
-                Console.WriteLine($"got {msg.Data.SensorId}");
                 Guid sensorId = Guid.Parse($"{msg.Data.SensorId}");
                 Console.WriteLine($"sensor ID = {sensorId}");
+
+
                 try
                 {
+                    Console.WriteLine($"11111111111");
                     var queryResult = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.SensorId == sensorId);
 
+                    Console.WriteLine($"22222222");
                     if (queryResult == null)
                     {
-                        throw new ArgumentException("Sensor ID not found.");
+                        Console.WriteLine($"3333333333");
+                        // throw new ArgumentException("Sensor ID not found.");
+                        await msg.ReplyAsync($"Error occurred: Sensor ID not found.");
+                    }
+                    else
+                    {
+
                     }
                     Console.WriteLine($"{queryResult.SensorId}");
                     Console.WriteLine($"{queryResult.Process}");
@@ -133,9 +142,12 @@ namespace MyAbpApp.NatsImplements
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error occurred: {ex.Message}");
-                    throw;
+                    // throw;
+                    Console.WriteLine($"88888888888");
+                    await msg.ReplyAsync($"Error occurred: {ex.Message}");
                 }
 
+                Console.WriteLine($"99999999999");
                 await msg.ReplyAsync(msg.Data);
 
             }
