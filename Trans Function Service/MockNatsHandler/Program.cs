@@ -15,6 +15,7 @@ namespace MockNatsClient
         public string? SensorId { get; set; }
         public double? OriginalValue { get; set; }
         public double? ResultValue { get; set; }
+        public string? Message { get; set; }
     }
     class Program
     {
@@ -169,8 +170,8 @@ namespace MockNatsClient
                 var result = await nc.RequestAsync<PhysicalQuality, PhysicalQuality>(subject: $"{serviceName}.{functionName}", data: testCaes);
                 Console.WriteLine($"Sensor ID: {result.Data.SensorId}");
                 Console.WriteLine($"Original Value: {result.Data.OriginalValue}");
-                Console.WriteLine($"cPQ Return Value: {result.Data.ResultValue}");
-                Console.WriteLine("");
+                Console.WriteLine($"Result Value: {result.Data.ResultValue}");
+                Console.WriteLine($"Message: {result.Data.Message}");
             }
             Console.WriteLine("Bye!");
         }

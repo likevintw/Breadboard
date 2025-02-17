@@ -23,6 +23,7 @@ namespace MyAbpApp.NatsImplements
         public string? SensorId { get; set; }
         public double? OriginalValue { get; set; }
         public double? ResultValue { get; set; }
+        public string? Message { get; set; }
     }
     public class NatsImplement : IWorkManager
     {
@@ -89,18 +90,17 @@ namespace MyAbpApp.NatsImplements
                 Guid sensorId = Guid.Parse($"{msg.Data.SensorId}");
                 Console.WriteLine($"sensor ID = {sensorId}");
 
-
                 try
                 {
-                    Console.WriteLine($"11111111111");
                     var queryResult = await _contexturalPhysicalQualityRepository.FirstOrDefaultAsync(x => x.SensorId == sensorId);
 
-                    Console.WriteLine($"22222222");
                     if (queryResult == null)
                     {
-                        Console.WriteLine($"3333333333");
                         // throw new ArgumentException("Sensor ID not found.");
-                        await msg.ReplyAsync($"Error occurred: Sensor ID not found.");
+                        msg.Data.Message = "Error: Sensor ID not found.";
+                        Console.WriteLine($"Error: {msg.Data.Message}");
+                        await msg.ReplyAsync(msg.Data);
+                        return;
                     }
                     else
                     {
@@ -138,17 +138,16 @@ namespace MyAbpApp.NatsImplements
                             msg.Data.ResultValue = msg.Data.OriginalValue;
                             break;
                     }
+                    msg.Data.Message = "ok";
+                    return;
                 }
                 catch (Exception ex)
                 {
+                    msg.Data.Message = $"{msg.Data.Message}";
                     Console.WriteLine($"Error occurred: {ex.Message}");
-                    // throw;
-                    Console.WriteLine($"88888888888");
-                    await msg.ReplyAsync($"Error occurred: {ex.Message}");
+                    await msg.ReplyAsync(msg.Data);
+                    return;
                 }
-
-                Console.WriteLine($"99999999999");
-                await msg.ReplyAsync(msg.Data);
 
             }
         }
